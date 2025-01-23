@@ -19,3 +19,6 @@ class Client(models.Model):
         db_table = 'client'
         verbose_name = 'Client'
         verbose_name_plural = 'Clients'
+
+    def formatted_address(self):
+        return f"{self.address}, {self.neighborhood}, {self.city} - {self.state}, {self.zip_code}"
