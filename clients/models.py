@@ -35,10 +35,10 @@ class Client(models.Model):
     city                = models.CharField(max_length=45)
     cnpj                = models.CharField(max_length=20, null=True, blank=True)
     state               = models.CharField(max_length=2, choices=State.choices, help_text="Abreviação do estado")    
-    created             = models.DateTimeField(auto_now_add=True)
     address             = models.CharField(max_length=45)
-    modified            = models.DateTimeField(auto_now=True)
     trade_name          = models.CharField(max_length=144, help_text="Nome fantasia")
+    created_at          = models.DateTimeField(auto_now_add=True)
+    modified_at         = models.DateTimeField(auto_now=True)
     neighborhood        = models.CharField(max_length=45)
     corporate_name      = models.CharField(max_length=144, help_text="Razão Social")
     state_registration  = models.CharField(max_length=20, null=True, blank=True, help_text="Inscrição estadual")
@@ -52,3 +52,22 @@ class Client(models.Model):
     def formatted_address(self):
         return f"{self.address}, {self.neighborhood}, {self.city} - {self.state}, {self.zip_code}"
     
+
+class ClientContact(models.Model):
+    '''Contatos dos clientes'''
+    STATUS_CHOICES = [(True, "Ativo"), (False, "Inativo")]
+
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    department = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+    status = models.BooleanField(choices=STATUS_CHOICES, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'client_contact'
+        verbose_name = 'Client Contact'
+        verbose_name_plural = 'Client Contacts'
+        ordering = ['name']
