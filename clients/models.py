@@ -71,3 +71,7 @@ class ClientContact(models.Model):
         verbose_name = 'Client Contact'
         verbose_name_plural = 'Client Contacts'
         ordering = ['name']
+
+
+class Benefit(models.Model):
+    benefit = models.CharField(max_length=50)
