@@ -44,6 +44,9 @@ class Client(models.Model):
     state_registration  = models.CharField(max_length=20, null=True, blank=True, help_text="Inscrição estadual")
     number_of_employees = models.IntegerField(null=True, blank=True, help_text="Número de empregados")
 
+    def __str__(self):
+        return self.trade_name
+
     class Meta:
         db_table = 'client'
         verbose_name = 'Client'
@@ -66,6 +69,9 @@ class ClientContact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = 'client_contact'
         verbose_name = 'Client Contact'
@@ -75,3 +81,6 @@ class ClientContact(models.Model):
 
 class Benefit(models.Model):
     benefit = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.benefit
