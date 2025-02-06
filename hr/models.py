@@ -6,6 +6,10 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name = "Cargo"
+        verbose_name_plural = "Cargos"
 
 
 class Resume(models.Model):
@@ -104,6 +108,10 @@ class Resume(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Currículo"
+        verbose_name_plural = "Currículos"
+
 
 class WorkExperience(models.Model):
     resume = models.ForeignKey(
@@ -120,3 +128,7 @@ class WorkExperience(models.Model):
 
     def __str__(self):
         return f"{self.position_title} na {self.company_name}"
+
+    class Meta:
+        verbose_name = "Experiência"
+        verbose_name_plural = "Experiências"

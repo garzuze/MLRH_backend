@@ -65,8 +65,8 @@ class Client(models.Model):
 
     class Meta:
         db_table = 'client'
-        verbose_name = 'Client'
-        verbose_name_plural = 'Clients'
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
 
     def formatted_address(self):
         return f"{self.address}, {self.neighborhood}, {self.city} - {self.state}, {self.zip_code}"
@@ -101,6 +101,10 @@ class Benefit(models.Model):
 
     def __str__(self):
         return self.benefit
+    
+    class Meta:
+        verbose_name = "Benefício"
+        verbose_name_plural = "Benefícios"
 
 
 class Service(models.Model):
@@ -116,4 +120,4 @@ class Service(models.Model):
         verbose_name_plural = 'Serviços'
 
 # class ClientFee(models.Model):
-#     client = models.ForeignKey(Client, on_delete=models.SET_NULL)
+#     client = models.ForeignKey(Client, on_delete=models.)
