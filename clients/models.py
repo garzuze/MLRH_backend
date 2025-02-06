@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class State(models.TextChoices):
     AC = 'AC', 'Acre'
     AL = 'AL', 'Alagoas'
@@ -29,20 +30,35 @@ class State(models.TextChoices):
     TO = 'TO', 'Tocantins'
 
 
+class EconomicActivity(models.Model):
+    '''Atividade econômica'''
+    title = models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.title
+    class Meta:
+        verbose_name = 'Atividade Econômica'
+        verbose_name_plural = 'Atividades Econômicas'
+
 class Client(models.Model):
-    id                  = models.AutoField(primary_key=True)
-    cep                 = models.CharField(max_length=9, null=True, blank=True)
-    city                = models.CharField(max_length=45)
-    cnpj                = models.CharField(max_length=20, null=True, blank=True)
-    state               = models.CharField(max_length=2, choices=State.choices, help_text="Abreviação do estado")    
-    address             = models.CharField(max_length=45)
-    trade_name          = models.CharField(max_length=144, help_text="Nome fantasia")
-    created_at          = models.DateTimeField(auto_now_add=True)
-    modified_at         = models.DateTimeField(auto_now=True)
-    neighborhood        = models.CharField(max_length=45)
-    corporate_name      = models.CharField(max_length=144, help_text="Razão Social")
-    state_registration  = models.CharField(max_length=20, null=True, blank=True, help_text="Inscrição estadual")
-    number_of_employees = models.IntegerField(null=True, blank=True, help_text="Número de empregados")
+    id = models.AutoField(primary_key=True)
+    cep = models.CharField(max_length=9, null=True, blank=True)
+    city = models.CharField(max_length=45)
+    cnpj = models.CharField(max_length=20, null=True, blank=True)
+    state = models.CharField(
+        max_length=2, choices=State.choices, help_text="Abreviação do estado")
+    address = models.CharField(max_length=45)
+    trade_name = models.CharField(max_length=144, help_text="Nome fantasia")
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    neighborhood = models.CharField(max_length=45)
+    corporate_name = models.CharField(max_length=144, help_text="Razão Social")
+    state_registration = models.CharField(
+        max_length=20, null=True, blank=True, help_text="Inscrição estadual")
+    number_of_employees = models.IntegerField(
+        null=True, blank=True, help_text="Número de empregados")
+    economic_activity = models.ForeignKey(
+        EconomicActivity, on_delete=models.RESTRICT, default=1)
 
     def __str__(self):
         return self.trade_name
@@ -54,13 +70,14 @@ class Client(models.Model):
 
     def formatted_address(self):
         return f"{self.address}, {self.neighborhood}, {self.city} - {self.state}, {self.zip_code}"
-    
+
 
 class ClientContact(models.Model):
     '''Contatos dos clientes'''
     STATUS_CHOICES = [(True, "Ativo"), (False, "Inativo")]
 
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
+    client = models.ForeignKey(
+        Client, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=100)
     department = models.CharField(max_length=50)
     phone = models.CharField(max_length=20, null=True, blank=True)
@@ -84,3 +101,6 @@ class Benefit(models.Model):
 
     def __str__(self):
         return self.benefit
+
+# class ClientFee(models.Model):
+#     client = models.ForeignKey(Client, on_delete=models.SET_NULL)
