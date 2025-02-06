@@ -91,8 +91,8 @@ class ClientContact(models.Model):
 
     class Meta:
         db_table = 'client_contact'
-        verbose_name = 'Client Contact'
-        verbose_name_plural = 'Client Contacts'
+        verbose_name = 'Contato Cliente'
+        verbose_name_plural = 'Contatos Clientes'
         ordering = ['name']
 
 
@@ -101,6 +101,19 @@ class Benefit(models.Model):
 
     def __str__(self):
         return self.benefit
+
+
+class Service(models.Model):
+    service = models.CharField(max_length=60)
+    type_of_charge = models.IntegerField(blank=True, null=True)
+    deadline = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.service
+    
+    class Meta:
+        verbose_name = 'Serviço'
+        verbose_name_plural = 'Serviços'
 
 # class ClientFee(models.Model):
 #     client = models.ForeignKey(Client, on_delete=models.SET_NULL)
