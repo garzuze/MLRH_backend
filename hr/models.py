@@ -39,7 +39,7 @@ class Gender(models.TextChoices):
 
 
 class Resume(models.Model):
-
+    '''Currículo de um candidato'''
     LANGUAGE_LEVEL_CHOICES = [
         (1, "Básico"),
         (2, "Intermediário"),
@@ -345,3 +345,36 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.position.name} - {self.client.name}"
+
+class Report(models.Model):
+    '''Parecer de uma vaga'''
+    profile = models.ForeignKey(Profile, on_delete=models.PROTECT, default=1)
+    resume = models.ForeignKey(Resume, on_delete=models.PROTECT, default=1)
+
+    test_result = models.TextField(blank=True)
+    personal_family_context = models.TextField(blank=True)
+    educational_background = models.TextField(blank=True)
+    professional_summary = models.TextField(blank=True)
+    candidate_profile = models.TextField(blank=True)
+    career_objectives = models.TextField(blank=True)
+    final_considerations = models.TextField(blank=True)
+
+    agreed_salary = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        default=0.00
+    )
+
+    candidate_start_date = models.DateField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Parecer"
+        verbose_name_plural = "Pareceres"
+
+    def __str__(self):
+        return f" {self.candidate.name} - Status: {self.get_status_display()}"
