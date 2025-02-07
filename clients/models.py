@@ -119,5 +119,17 @@ class Service(models.Model):
         verbose_name = 'Serviço'
         verbose_name_plural = 'Serviços'
 
-# class ClientFee(models.Model):
-#     client = models.ForeignKey(Client, on_delete=models.)
+class ClientFee(models.Model):
+    ''''Honorário'''
+    client = models.ForeignKey(Client, on_delete=models.RESTRICT, default=1)
+    service = models.ForeignKey(Service, on_delete=models.RESTRICT, default=1)
+    percentual = models.DecimalField(max_digits=12, decimal_places=2)
+    value = models.IntegerField(null=True, blank=True)
+    deadline = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.client
+    
+    class Meta:
+        verbose_name = 'Honorário'
+        verbose_name_plural = 'Honorários'
