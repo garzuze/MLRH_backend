@@ -1,36 +1,44 @@
 from django.db import models
 
+from clients.models import Client, ClientContact, ClientFee
+
 
 class Position(models.Model):
     title = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         verbose_name = "Cargo"
         verbose_name_plural = "Cargos"
 
 
-class Resume(models.Model):
-    GENDER_CHOICES = [("M", "Masculino"), ("F", "Feminino"), ("O", "Outro")]
-    MARITAL_STATUS_CHOICES = [
-        (1, "Solteiro(a)"),
-        (2, "Casado(a)"),
-        (3, "Divorciado(a)"),
-        (4, "Viúvo(a)"),
-    ]
+class MaritalStatus(models.TextChoices):
+    SINGLE = "S", "Solteiro(a)"
+    MARRIED = "M", "Casado(a)"
+    DIVORCED = "D", "Divorciado(a)"
+    WIDOWED = "V", "Viúvo(a)"
 
-    EDUCATION_LEVEL_CHOICES = [
-        (1, "Ensino Fundamental"),
-        (2, "Ensino Médio"),
-        (3, "Ensino Médio Técnico"),
-        (4, "Tecnólogo"),
-        (5, "Graduação"),
-        (6, "Pós-graduação"),
-        (7, "Mestrado"),
-        (8, "Doutorado"),
-    ]
+
+class EducationLevel(models.TextChoices):
+    EF = "EF", "Ensino Fundamental"
+    EM = "EM", "Ensino Médio"
+    ET = "ET", "Ensino Médio Técnico"
+    TE = "TE", "Tecnólogo"
+    GR = "GR", "Graduação"
+    PG = "PG", "Pós-graduação"
+    ME = "ME", "Mestrado"
+    DR = "DR", "Doutorado"
+
+
+class Gender(models.TextChoices):
+    M = "M", "Masculino"
+    F = "F", "Feminino"
+    O = "O", "Outro"
+
+
+class Resume(models.Model):
 
     LANGUAGE_LEVEL_CHOICES = [
         (1, "Básico"),
@@ -44,10 +52,13 @@ class Resume(models.Model):
     ]
 
     name = models.CharField(max_length=60)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=1, choices=Gender.choices)
     birth_date = models.DateField()
     birth_place = models.CharField(max_length=45)
-    marital_status = models.IntegerField(choices=MARITAL_STATUS_CHOICES)
+    marital_status = models.CharField(
+        choices=MaritalStatus.choices,
+        max_length=1,
+        help_text="Estado civil")
     spouse_name = models.CharField(
         max_length=45, null=True, blank=True, help_text="Nome cônjuge")
     spouse_profession = models.CharField(max_length=45, null=True, blank=True)
@@ -67,12 +78,17 @@ class Resume(models.Model):
     state = models.CharField(max_length=45)
     postal_code = models.CharField(max_length=9)
     phone = models.CharField(max_length=15)
-    contact_phone = models.CharField(max_length=15, null=True, blank=True, help_text="Telefone para contato")
+    contact_phone = models.CharField(
+        max_length=15, null=True, blank=True, help_text="Telefone para contato")
     email = models.EmailField(max_length=100)
     linkedin = models.URLField(null=True, blank=True)
 
     # Education & Skills
-    education_level = models.IntegerField(choices=EDUCATION_LEVEL_CHOICES)
+    education_level = models.CharField(
+        choices=EducationLevel.choices,
+        max_length=2,
+        help_text="Nível de escolaridade"
+    )
     education_details = models.TextField()
     english_level = models.IntegerField(choices=LANGUAGE_LEVEL_CHOICES)
     spanish_level = models.IntegerField(choices=LANGUAGE_LEVEL_CHOICES)
@@ -132,3 +148,200 @@ class WorkExperience(models.Model):
     class Meta:
         verbose_name = "Experiência"
         verbose_name_plural = "Experiências"
+
+
+class ProfileStatus(models.TextChoices):
+    ACTIVE = "A", "Ativo"
+    INACTIVE = "I", "Inativo"
+    CANCELED = "C", "Cancelado"
+    SUSPENDED = "S", "Suspenso"
+
+
+class Profile(models.Model):
+    """Perfil de uma vaga ou posição dentro de uma empresa."""
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.PROTECT,
+        related_name="profiles",
+        help_text="Cliente associado a este perfil.",
+        default=1
+    )
+
+    client_contact = models.ForeignKey(
+        ClientContact,
+        on_delete=models.PROTECT,
+        related_name="profiles",
+        help_text="Contato dentro da empresa cliente.",
+        default=1
+    )
+
+    position = models.ForeignKey(
+        Position,
+        on_delete=models.PROTECT,
+        related_name="profiles",
+        help_text="Cargo associado ao perfil.",
+        default=1,
+    )
+
+    fee = models.ForeignKey(
+        ClientFee,
+        on_delete=models.PROTECT,
+        related_name="profiles",
+        help_text="Honorário associado ao serviço.",
+        default=1
+    )
+
+    date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Data de criação do perfil."
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=ProfileStatus.choices,
+        default=ProfileStatus.ACTIVE,
+        help_text="Status do perfil: Ativo (A), Inativo (I), Cancelado (C) ou Suspenso (S)."
+    )
+
+    deadline = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Prazo para preenchimento da vaga (em dias)."
+    )
+
+    estimated_delivery = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Previsão de entrega do perfil ao cliente."
+    )
+
+    confidential = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text="Se marcado, indica que a vaga é sigilosa."
+    )
+
+    quantity = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Quantidade de posições disponíveis para este perfil."
+    )
+
+    remuneration = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Remuneração oferecida para a vaga."
+    )
+
+    service_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Valor do serviço de recrutamento."
+    )
+
+    title_generated = models.BooleanField(
+        default=False,
+        help_text="Indica se o título para esta vaga já foi gerado."
+    )
+
+    work_schedule = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text="Horário e frequência de trabalho para a vaga."
+    )
+
+    age = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Idade mínima recomendada para a vaga."
+    )
+
+    marital_status = models.CharField(
+        choices=MaritalStatus.choices,
+        help_text="Estado civil do candidato desejado.",
+        max_length=1
+    )
+
+    gender = models.CharField(
+        max_length=1,
+        null=True,
+        blank=True,
+        choices=Gender.choices,
+        help_text="Gênero do candidato desejado."
+    )
+
+    education_level = models.CharField(
+        choices=EducationLevel.choices,
+        max_length=2,
+        help_text="Nível de escolaridade exigido para a vaga."
+    )
+
+    computer_skills = models.TextField(
+        blank=True,
+        help_text="Habilidades em informática necessárias para a vaga."
+    )
+
+    languages = models.CharField(
+        max_length=45,
+        null=True,
+        blank=True,
+        help_text="Idiomas exigidos ou desejáveis para a vaga."
+    )
+
+    job_responsibilities = models.TextField(
+        blank=True,
+        help_text="Principais atividades e responsabilidades da posição."
+    )
+
+    professional_experience = models.TextField(
+        blank=True,
+        help_text="Experiência profissional exigida para a posição."
+    )
+
+    behavioral_profile = models.TextField(
+        blank=True,
+        help_text="Perfil comportamental desejado para o candidato."
+    )
+
+    work_environment = models.TextField(
+        blank=True,
+        help_text="Características do local de trabalho."
+    )
+
+    additional_notes = models.TextField(
+        blank=True,
+        help_text="Observações gerais sobre a vaga."
+    )
+
+    restrictions = models.TextField(
+        blank=True,
+        help_text="Restrições ou requisitos especiais para a posição."
+    )
+
+    cancellation_reason = models.TextField(
+        blank=True,
+        help_text="Motivo do cancelamento da vaga, se aplicável."
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Data e hora de criação do perfil."
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text="Data e hora da última modificação no perfil."
+    )
+
+    class Meta:
+        verbose_name = "Perfil"
+        verbose_name_plural = "Perfis"
+
+    def __str__(self):
+        return f"{self.position.name} - {self.client.name}"
