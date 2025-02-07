@@ -1,6 +1,6 @@
 # Backend MLRH
 ## Lista de tarefas:
-- [ ] Transformar todas as tabelas em models
+- [x] Transformar todas as tabelas em models
 - [ ] Importar dados do antigo sistema para o Django
 - [ ] Criar API
 
