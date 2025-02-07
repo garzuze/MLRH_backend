@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import AccountsReceivableTitle, AccountsPayableTitle
+
+admin.site.register(AccountsReceivableTitle)
+admin.site.register(AccountsPayableTitle)

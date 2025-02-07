@@ -69,7 +69,7 @@ class Client(models.Model):
     number_of_employees = models.IntegerField(
         null=True, blank=True, help_text="Número de empregados")
     economic_activity = models.ForeignKey(
-        EconomicActivity, on_delete=models.RESTRICT, default=1)
+        EconomicActivity, on_delete=models.SET_NULL, null=True)
 
     benefits = models.ManyToManyField(Benefit, related_name="clients")
 
