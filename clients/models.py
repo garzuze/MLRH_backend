@@ -30,6 +30,17 @@ class State(models.TextChoices):
     TO = 'TO', 'Tocantins'
 
 
+class Benefit(models.Model):
+    benefit = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.benefit
+    
+    class Meta:
+        verbose_name = "Benefício"
+        verbose_name_plural = "Benefícios"
+
+
 class EconomicActivity(models.Model):
     '''Atividade econômica'''
     title = models.CharField(max_length=120)
@@ -59,6 +70,8 @@ class Client(models.Model):
         null=True, blank=True, help_text="Número de empregados")
     economic_activity = models.ForeignKey(
         EconomicActivity, on_delete=models.RESTRICT, default=1)
+
+    benefits = models.ManyToManyField(Benefit, related_name="clients")
 
     def __str__(self):
         return self.trade_name
@@ -94,17 +107,6 @@ class ClientContact(models.Model):
         verbose_name = 'Contato Cliente'
         verbose_name_plural = 'Contatos Clientes'
         ordering = ['name']
-
-
-class Benefit(models.Model):
-    benefit = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.benefit
-    
-    class Meta:
-        verbose_name = "Benefício"
-        verbose_name_plural = "Benefícios"
 
 
 class Service(models.Model):
