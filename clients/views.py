@@ -8,8 +8,9 @@ def update_data(request):
         json_file = request.FILES['json_file']
         data = json.load(json_file)
         for item in data:
-            economic_activity = EconomicActivity(
-                title = item["descricao"]
+            economic_activity = EconomicActivity.objects.update_or_create(
+                id = item['id'],
+                title = item["descricao"],
             )
             economic_activity.save()
         return render(request, 'clients/success.html')
