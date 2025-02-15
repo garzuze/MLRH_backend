@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 import json
-from .models import ClientContact, Client
+from .models import Benefit, Client
 
 def update_data(request):
     """Recuperar dados de sistema antigo a partir de arquivos JSON"""
@@ -8,23 +9,11 @@ def update_data(request):
         json_file = request.FILES['json_file']
         data = json.load(json_file)
 
-        status_choices = {
-            "0": False,
-            "1": True,
-        }
-
         for item in data:
-            status = status_choices.get(item["status"])
-            client = Client.objects.get(id=item["cliente_id"])
-            client_contact = ClientContact(
-                id = item['id'],
-                client = client,
-                name = item["nome"],
-                department = item["departamento"],
-                phone = item["telefone"],
-                email = item["email"],
-                status = status
-            )
-            client_contact.save()
+            print(item["cliente_id"])
+            print(item["beneficio_id"])
+            client = get_object_or_404(Client, id=int(item["cliente_id"]))
+            benefit = Benefit.objects.get(id=int(item["beneficio_id"]))
+            client.benefits.add(benefit)
         return render(request, 'clients/success.html')
     return render(request, 'clients/form.html')
