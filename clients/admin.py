@@ -13,8 +13,13 @@ class ClientAdmin(admin.ModelAdmin):
     search_fields = ["cnpj", "corporate_name"]
     list_filter = ["state"]
 
+class ClientContactAdmin(admin.ModelAdmin):
+    list_display = ["id", "name", "client", "department", "phone", "email", "status"]
+    search_fields = ["name", "phone"]
+    list_filter = ["status"]
+
 admin.site.register(Client, ClientAdmin)
-admin.site.register(ClientContact)
+admin.site.register(ClientContact, ClientContactAdmin)
 admin.site.register(Benefit, BenefitAdmin)
 admin.site.register(EconomicActivity, EconomicActivityAdmin)
 admin.site.register(Service)
