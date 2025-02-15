@@ -66,12 +66,12 @@ class Client(models.Model):
     corporate_name = models.CharField(max_length=144, help_text="Razão Social")
     state_registration = models.CharField(
         max_length=20, null=True, blank=True, help_text="Inscrição estadual")
-    number_of_employees = models.IntegerField(
+    number_of_employees = models.PositiveIntegerField(
         null=True, blank=True, help_text="Número de empregados")
     economic_activity = models.ForeignKey(
         EconomicActivity, on_delete=models.SET_NULL, null=True)
 
-    benefits = models.ManyToManyField(Benefit, related_name="clients")
+    benefits = models.ManyToManyField(Benefit, related_name="clients", blank=True)
 
     def __str__(self):
         return self.trade_name
