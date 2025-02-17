@@ -21,6 +21,5 @@ from clients.views import update_data
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main.urls')),
     path('update_data', update_data)
 ]
