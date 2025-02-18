@@ -1,6 +1,10 @@
+import json
+from django.shortcuts import render
+from clients.models import Client, Benefit
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -38,3 +42,19 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+def update_data(request):
+    """Recuperar dados de sistema antigo a partir de arquivos JSON"""
+    if request.method == 'POST' and request.FILES['json_file']:
+        json_file = request.FILES['json_file']
+        data = json.load(json_file)
+
+        for item in data:
+            print(item["cliente_id"])
+            print(item["beneficio_id"])
+            client = get_object_or_404(Client, id=int(item["cliente_id"]))
+            benefit = Benefit.objects.get(id=int(item["beneficio_id"]))
+            client.benefits.add(benefit)
+        return render(request, 'clients/success.html')
+    return render(request, 'clients/form.html')
