@@ -13,3 +13,8 @@ class BenefitViewSet(viewsets.ModelViewSet):
     serializer_class = BenefitSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
+class EconomicActivityViewSet(viewsets.ModelViewSet):
+    queryset = EconomicActivity.objects.all()
+    serializer_class = EconomicActivitySerializer
+    permission_classes = [permissions.IsAuthenticated]
