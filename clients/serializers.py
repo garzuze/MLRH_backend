@@ -22,3 +22,11 @@ class ClientSerializer(serializers.ModelSerializer):
             'neighborhood', 'city', 'state', 'state_registration', 'number_of_employees',
             'economic_activity', 'benefits'
         ]
+
+
+class ClientMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ['id', 'corporate_name']
+
+

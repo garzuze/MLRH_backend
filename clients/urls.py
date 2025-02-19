@@ -10,5 +10,7 @@ router.register(r'economic_activity', EconomicActivityViewSet, basename='economi
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("search_clients/", search_clients, name="search_clients")
 ]
+
+urlpatterns += router.urls
