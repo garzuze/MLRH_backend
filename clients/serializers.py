@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Benefit, EconomicActivity
+from .models import Client, Benefit, EconomicActivity, ClientContact
 
 class EconomicActivitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,9 @@ class ClientMinimalSerializer(serializers.ModelSerializer):
         fields = ['id', 'corporate_name']
 
 
+class ClientContactSerializer(serializers.ModelSerializer):
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
+
+    class Meta:
+        model = ClientContact
+        fields = ["id", "client", "name", "department", "phone", "email", "status"]

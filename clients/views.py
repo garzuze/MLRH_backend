@@ -1,7 +1,7 @@
-from .models import Client, Benefit, EconomicActivity
+from .models import Client, Benefit, EconomicActivity, ClientContact
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import ClientSerializer, BenefitSerializer, EconomicActivitySerializer, ClientMinimalSerializer
+from .serializers import ClientSerializer, BenefitSerializer, EconomicActivitySerializer, ClientMinimalSerializer, ClientContactSerializer
 from rest_framework import permissions, viewsets
 
 class ClientViewSet(viewsets.ModelViewSet):
@@ -19,6 +19,12 @@ class BenefitViewSet(viewsets.ModelViewSet):
 class EconomicActivityViewSet(viewsets.ModelViewSet):
     queryset = EconomicActivity.objects.all()
     serializer_class = EconomicActivitySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ClientContactViewSet(viewsets.ModelViewSet):
+    queryset = ClientContact.objects.all()
+    serializer_class = ClientContactSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
