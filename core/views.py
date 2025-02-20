@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from clients.models import Client, Benefit
+from clients.models import Service
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -51,10 +51,13 @@ def update_data(request):
         data = json.load(json_file)
 
         for item in data:
-            print(item["cliente_id"])
-            print(item["beneficio_id"])
-            client = get_object_or_404(Client, id=int(item["cliente_id"]))
-            benefit = Benefit.objects.get(id=int(item["beneficio_id"]))
-            client.benefits.add(benefit)
+            service = Service(
+                id = item["id"],
+                service = item["descricao"],
+                type_of_charge = item["tipoCobranca"],
+                deadline = item["prazo"],
+            )
+            service.save()
+            
         return render(request, 'clients/success.html')
     return render(request, 'clients/form.html')
