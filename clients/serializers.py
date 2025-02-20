@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Benefit, EconomicActivity, ClientContact
+from .models import Client, Benefit, EconomicActivity, ClientContact, Service
 
 class EconomicActivitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +36,9 @@ class ClientContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientContact
         fields = ["id", "client", "name", "department", "phone", "email", "status"]
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ["id", "service"]
