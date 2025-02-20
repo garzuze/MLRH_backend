@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Benefit, EconomicActivity, ClientContact, Service
+from .models import Client, Benefit, ClientFee, EconomicActivity, ClientContact, Service
 
 class EconomicActivitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,3 +42,12 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ["id", "service"]
+
+
+class ClientFeeSerializer(serializers.ModelSerializer):
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
+    service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all())
+
+    class Meta:
+        model = ClientFee
+        fields = ["id", "client", "service", "percentual", "value", "deadline"]
