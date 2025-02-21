@@ -13,7 +13,8 @@ router.register(r'client_fee', ClientFeeViewSet, basename="client_fee")
 
 
 urlpatterns = [
-    path("search_clients/", search_clients, name="search_clients")
+    path("search_clients/", search_clients, name="search_clients"),
+    path("get_client_contacts/", get_client_contacts, name="get_client_contacts"),
 ]
 
 urlpatterns += router.urls

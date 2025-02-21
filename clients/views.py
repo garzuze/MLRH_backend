@@ -47,6 +47,20 @@ def search_clients(request):
 
     if query:
         clients = Client.objects.filter(corporate_name__icontains=query)[:5]
+        print(clients)
         serializer = ClientMinimalSerializer(clients, many=True)
+        return Response(serializer.data)
+    return Response([])
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_client_contacts(request):
+    query = request.GET.get("q", "")
+
+    if query:
+        contacts = ClientContact.objects.filter(client__id=query)
+        print(contacts)
+        serializer = ClientContactSerializer(contacts, many=True)
         return Response(serializer.data)
     return Response([])

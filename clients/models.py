@@ -130,7 +130,7 @@ class ClientFee(models.Model):
     deadline = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.client.trade_name} - {self.service.service} - {self.percentual}%"
+        return f"{self.client.corporate_name} - {self.service.service} - {self.percentual}%"
     
     class Meta:
         verbose_name = 'Honorário'
