@@ -135,3 +135,4 @@ class ClientFee(models.Model):
     class Meta:
         verbose_name = 'Honorário'
         verbose_name_plural = 'Honorários'
+        unique_together = ('client', 'service')
