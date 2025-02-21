@@ -60,7 +60,18 @@ def get_client_contacts(request):
 
     if query:
         contacts = ClientContact.objects.filter(client__id=query)
-        print(contacts)
         serializer = ClientContactSerializer(contacts, many=True)
+        return Response(serializer.data)
+    return Response([])
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_client_fees(request):
+    query = request.GET.get("q", "")
+
+    if query:
+        client_fees = ClientFee.objects.filter(client__id=query)
+        serializer = ClientFeeSerializer(client_fees, many=True)
         return Response(serializer.data)
     return Response([])
