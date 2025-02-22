@@ -2,7 +2,7 @@ from .models import Client, Benefit, ClientFee, EconomicActivity, ClientContact,
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import ClientFeeSerializer, ClientSerializer, BenefitSerializer, EconomicActivitySerializer, ClientMinimalSerializer, ClientContactSerializer, ServiceSerializer
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
@@ -38,6 +38,21 @@ class ClientFeeViewSet(viewsets.ModelViewSet):
     queryset = ClientFee.objects.all()
     serializer_class = ClientFeeSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        client = request.data.get('client')
+        service = request.data.get('service')
+
+        if client and service:
+            existing_fee = ClientFee.objects.filter(client=client, service=service).first()
+
+            if existing_fee:
+                serializer = self.get_serializer(existing_fee, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        return super().create(request, *args, **kwargs)
 
 
 @api_view(['GET'])
