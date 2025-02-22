@@ -26,9 +26,13 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = ['id', 'service', 'type_of_charge', 'deadline']
 
 
+class ClientFeeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'client', 'service', 'percentual']
+    list_filter = ["client"]
+
 admin.site.register(Client, ClientAdmin)
 admin.site.register(ClientContact, ClientContactAdmin)
 admin.site.register(Benefit, BenefitAdmin)
 admin.site.register(EconomicActivity, EconomicActivityAdmin)
 admin.site.register(Service, ServiceAdmin)
-admin.site.register(ClientFee)
+admin.site.register(ClientFee, ClientFeeAdmin)
