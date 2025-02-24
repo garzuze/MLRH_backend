@@ -52,6 +52,7 @@ class Resume(models.Model):
     ]
 
     name = models.CharField(max_length=60)
+    cpf = models.CharField(max_length=14)
     gender = models.CharField(max_length=1, choices=Gender.choices)
     birth_date = models.DateField()
     birth_place = models.CharField(max_length=45)
@@ -71,12 +72,10 @@ class Resume(models.Model):
 
     # Contact Info
     address = models.CharField(max_length=100)
-    number = models.CharField(max_length=6)
-    complement = models.CharField(max_length=20, null=True, blank=True)
     neighborhood = models.CharField(max_length=45)
     city = models.CharField(max_length=45)
     state = models.CharField(max_length=45)
-    postal_code = models.CharField(max_length=9)
+    cep = models.CharField(max_length=9)
     phone = models.CharField(max_length=15)
     contact_phone = models.CharField(
         max_length=15, null=True, blank=True, help_text="Telefone para contato")
