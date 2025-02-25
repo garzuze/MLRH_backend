@@ -1,7 +1,7 @@
 from django.db import models
 
 from clients.models import Client, ClientContact, ClientFee
-
+from django.contrib.auth.models import  User
 
 class Position(models.Model):
     title = models.CharField(max_length=100)
@@ -69,6 +69,7 @@ class Resume(models.Model):
     has_car = models.BooleanField(default=False)
     has_disability = models.BooleanField(default=False)
     disability_cid = models.CharField(max_length=10, null=True, blank=True)
+    user = models.OneToOneField(User, verbose_name="Usuário", on_delete=models.CASCADE)
 
     # Contact Info
     address = models.CharField(max_length=100)
