@@ -7,37 +7,37 @@ from rest_framework import permissions, viewsets, status
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class BenefitViewSet(viewsets.ModelViewSet):
     queryset = Benefit.objects.all()
     serializer_class = BenefitSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class EconomicActivityViewSet(viewsets.ModelViewSet):
     queryset = EconomicActivity.objects.all()
     serializer_class = EconomicActivitySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ClientContactViewSet(viewsets.ModelViewSet):
     queryset = ClientContact.objects.all()
     serializer_class = ClientContactSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ClientFeeViewSet(viewsets.ModelViewSet):
     queryset = ClientFee.objects.all()
     serializer_class = ClientFeeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def create(self, request, *args, **kwargs):
         client = request.data.get('client')
@@ -56,7 +56,7 @@ class ClientFeeViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAdminUser])
 def search_clients(request):
     query = request.GET.get("q", "")
 
@@ -69,7 +69,7 @@ def search_clients(request):
 
 
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAdminUser])
 def get_client_contacts(request):
     query = request.GET.get("q", "")
 
@@ -81,7 +81,7 @@ def get_client_contacts(request):
 
 
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAdminUser])
 def get_client_fees(request):
     query = request.GET.get("q", "")
 
