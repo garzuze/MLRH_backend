@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from clients.models import Client, ClientContact, ClientFee
-from django.contrib.auth.models import  User
+User = get_user_model()
+
 
 class Position(models.Model):
     title = models.CharField(max_length=100)

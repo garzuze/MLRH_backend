@@ -2,7 +2,6 @@ import json
 from django.shortcuts import render
 from clients.models import Service
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -11,7 +10,7 @@ User = get_user_model()
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
-        email = attrs.get("username")
+        email = attrs.get("email")
         password = attrs.get("password")
 
         if not email and password:
