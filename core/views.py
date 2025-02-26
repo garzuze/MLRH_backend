@@ -7,8 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 
 from .serializers import RegistrationSerializer
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import status

@@ -1,12 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions, viewsets, status
+from rest_framework.views import APIView
 
 from hr.models import Resume
 from hr.serializers import ResumeSerializer
 
-# Create your views here.
+class GetResumeCPF(APIView):
+    '''
+    Receive CPF and return true if a resume with that cpf exists
+    '''
+    def get(self, request):
+        cpf = request.query_params.get('cpf')
+        
+        resume = Resume.objects.filter(cpf=cpf).first()
+        
+        if resume:
+            return Response({"message": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": True}, status=status.HTTP_204_NO_CONTENT)
+
 
 class GetResume(viewsets.ModelViewSet):
     serializer_class = ResumeSerializer
