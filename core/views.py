@@ -1,9 +1,17 @@
 import json
-from django.shortcuts import render
-from clients.models import Service
+from django.shortcuts import get_object_or_404, render
+from clients.models import Client, ClientContact
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.response import Response
+
+from django.contrib.auth.tokens import default_token_generator
+from .serializers import RegistrationSerializer
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework import status
+
 
 User = get_user_model()
 
@@ -43,6 +51,28 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
+class VerifyEmailAPIView(APIView):
+    '''
+    Receive user's uid and token. If token matches with user, activate the user
+    '''
+    def get(self, request):
+        uid = request.query_params.get('uid')
+        token = request.query_params.get('token')
+        
+        if not uid or not token:
+            return Response({"error": "Invalid verification link."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = get_object_or_404(User, pk=uid)
+        
+        # If it matches, we can activate the user!
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({"message": "Email verified successfully."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
 def update_data(request):
     """Recuperar dados de sistema antigo a partir de arquivos JSON"""
     if request.method == 'POST' and request.FILES['json_file']:
@@ -50,13 +80,22 @@ def update_data(request):
         data = json.load(json_file)
 
         for item in data:
-            service = Service(
+            if item["status"] == 0:
+                status = False
+            else:
+                status = True
+            contato = ClientContact.objects.create(
                 id = item["id"],
-                service = item["descricao"],
-                type_of_charge = item["tipoCobranca"],
-                deadline = item["prazo"],
+                client = Client.objects.get(id=int(item["cliente_id"])),
+                name = item["nome"],
+                department = item["departamento"],
+                phone = item["telefone"],
+                email = item["email"],
+                status = status,
             )
-            service.save()
-            
+            contato.save()
         return render(request, 'clients/success.html')
     return render(request, 'clients/form.html')
+
+class RegistrationView(generics.CreateAPIView):
+    serializer_class = RegistrationSerializer
