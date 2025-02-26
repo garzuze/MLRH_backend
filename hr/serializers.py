@@ -1,13 +1,17 @@
 from rest_framework import serializers
 from .models import Resume, Position
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ResumeSerializer(serializers.ModelSerializer):
     desired_positions = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), many=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
 
     class Meta:
         model = Resume
         fields = [
-            'id', 'name', 'cpf', 'gender', 'birth_date', 'birth_place', 
+            'id', 'name', 'user', 'cpf', 'gender', 'birth_date', 'birth_place', 
             'marital_status', 'spouse_name', 'spouse_profession', 'has_children', 
             'children_ages', 'is_smoker', 'has_car', 'has_disability', 
             'disability_cid', 'address', 'neighborhood', 'city', 'state', 'cep',
