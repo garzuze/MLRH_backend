@@ -1,8 +1,14 @@
-from django.contrib.auth.tokens import default_token_generator
-
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
 # Use Django's built-in function to generate a token
 # This token will be sent in the email's verification link
-# TODO: go even crazier and make this more secure and don't expose UID on URL
+# https://simpleisbetterthancomplex.com/tutorial/2016/08/24/how-to-create-one-time-link.html
 
-def generate_email_verification_token(user):
-    return default_token_generator.make_token(user)
+class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+            six.text_type(user.pk) + six.text_type(timestamp) +
+            six.text_type(user.is_active)
+        )
+
+generate_email_verification_token = AccountActivationTokenGenerator()

@@ -1,3 +1,4 @@
+from base64 import urlsafe_b64encode
 from django.urls import reverse
 from rest_framework import serializers
 from django.core.mail import send_mail
@@ -28,9 +29,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         user = User.objects.create_user(**validated_data)
-        token = generate_email_verification_token(user)
+        token = generate_email_verification_token.make_token(user)
         verify_path = reverse('verify-email')
-        verification_url = f"http://127.0.0.1:8000/{verify_path}?uid={user.pk}&token={token}"
+        verification_url = f"http://127.0.0.1:8000{verify_path}?uid={user.id}&token={token}"
 
 
         # Conteúdo do email

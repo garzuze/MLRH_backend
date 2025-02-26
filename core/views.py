@@ -6,11 +6,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 
-from django.contrib.auth.tokens import default_token_generator
 from .serializers import RegistrationSerializer
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import status
+from .utils import generate_email_verification_token
 
 
 User = get_user_model()
@@ -65,7 +67,7 @@ class VerifyEmailAPIView(APIView):
         user = get_object_or_404(User, pk=uid)
         
         # If it matches, we can activate the user!
-        if default_token_generator.check_token(user, token):
+        if generate_email_verification_token.check_token(user, token):
             user.is_active = True
             user.save()
             return Response({"message": "Email verified successfully."}, status=status.HTTP_200_OK)
