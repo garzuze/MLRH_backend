@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vu^dwe22gco5glwuw=-by44hmz4rfv^_)sbr4^1bq_p^%5r=oy'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = (os.environ.get('ALLOWED_HOSTS'), '127.0.0.1')
+CORS_ALLOWED_ORIGINS=(os.environ.get('CORS_ALLOWED_ORIGINS'), 'http://localhost:5173')
+STATIC_ROOT=os.environ.get('STATIC_ROOT')
 
 
 # Application definition
@@ -59,10 +61,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
 ]
 
 ROOT_URLCONF = 'mlrh_backend.urls'

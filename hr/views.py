@@ -18,7 +18,7 @@ class GetResumeCPF(APIView):
         if resume:
             return Response({"message": True}, status=status.HTTP_200_OK)
         else:
-            return Response({"message": True}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": False}, status=status.HTTP_204_NO_CONTENT)
 
 
 class GetResume(viewsets.ModelViewSet):
