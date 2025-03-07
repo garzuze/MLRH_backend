@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from clients.models import Client, ClientContact, ClientFee
+from clients.models import Client, ClientContact, ClientFee, State
 User = get_user_model()
 
 
@@ -54,7 +54,7 @@ class Resume(models.Model):
     ]
 
     name = models.CharField(max_length=60)
-    cpf = models.CharField(max_length=14)
+    cpf = models.CharField(max_length=14, unique=True)
     gender = models.CharField(max_length=1, choices=Gender.choices)
     birth_date = models.DateField()
     birth_place = models.CharField(max_length=45)
@@ -71,13 +71,14 @@ class Resume(models.Model):
     has_car = models.BooleanField(default=False)
     has_disability = models.BooleanField(default=False)
     disability_cid = models.CharField(max_length=10, null=True, blank=True)
-    user = models.OneToOneField(User, verbose_name="Usuário", on_delete=models.CASCADE)
+    user = models.OneToOneField(User, verbose_name="Usuário", on_delete=models.CASCADE, unique=True)
 
     # Contact Info
     address = models.CharField(max_length=100)
     neighborhood = models.CharField(max_length=45)
     city = models.CharField(max_length=45)
-    state = models.CharField(max_length=45)
+    state = models.CharField(
+        max_length=2, choices=State.choices, help_text="Abreviação do estado")
     cep = models.CharField(max_length=9)
     phone = models.CharField(max_length=15)
     contact_phone = models.CharField(
