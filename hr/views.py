@@ -32,3 +32,24 @@ class GetResume(viewsets.ModelViewSet):
         """
         user = self.request.user
         return Resume.objects.filter(user=user)
+
+
+class ResumeViewSet(viewsets.ModelViewSet):
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        user_id = request.data.get('user')
+        cpf = request.data.get('cpf')
+
+        if user_id and cpf:
+            existing_resume = Resume.objects.filter(user=user_id, cpf=cpf).first()
+
+            if existing_resume:
+                serializer = self.get_serializer(existing_resume, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        return super().create(request, *args, **kwargs)
