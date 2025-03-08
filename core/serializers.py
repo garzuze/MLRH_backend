@@ -30,8 +30,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         user = User.objects.create_user(**validated_data)
         token = generate_email_verification_token.make_token(user)
-        verify_path = reverse('verify-email')
-        verification_url = f"http://127.0.0.1:8000{verify_path}?uid={user.id}&token={token}"
+        verification_url = f"http://localhost:5173/verify-email?uid={user.id}&token={token}"
 
 
         # Conteúdo do email

@@ -120,7 +120,7 @@ class Resume(models.Model):
         default=False, help_text="Folguista")
 
     # Status & Timestamps
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="A")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -347,7 +347,7 @@ class Profile(models.Model):
         verbose_name_plural = "Perfis"
 
     def __str__(self):
-        return f"{self.position.name} - {self.client.name}"
+        return f"{self.position.title} - {self.client.corporate_name}"
 
 class Report(models.Model):
     '''Parecer de uma vaga'''
