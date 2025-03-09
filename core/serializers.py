@@ -27,24 +27,82 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-
         user = User.objects.create_user(**validated_data)
         token = generate_email_verification_token.make_token(user)
         verification_url = f"http://localhost:5173/verify-email?uid={user.id}&token={token}"
 
-
-        # Conteúdo do email
         subject = "Verifique seu email"
-        message = (
+        plain_message = (
             "Seja bem vindo!\n\n"
             "Por favor, verifique seu email clicando no link abaixo:\n"
             f"{verification_url}\n\n"
         )
+        
+        html_message = f"""
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+                margin: 0;
+                padding: 20px;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            }}
+            h1 {{
+                color: #333333;
+            }}
+            p {{
+                color: #555555;
+                line-height: 1.5;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #28a745;
+                color: #ffffff;
+                padding: 10px 20px;
+                margin: 20px 0;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+            .footer {{
+                font-size: 12px;
+                color: #999999;
+                text-align: center;
+                margin-top: 20px;
+            }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+            <h1>Bem Vindo!</h1>
+            <p>Obrigado por se registrar. Por favor, verifique seu email clicando no botão abaixo:</p>
+            <p style="text-align: center;">
+                <a href="{verification_url}" class="button">Verificar Email</a>
+            </p>
+            <p>Se você não criou essa conta, por favor, ignore este email.</p>
+            </div>
+            <div class="footer">
+            &copy; 2025 MLRH. Todos os direitos reservados.
+            </div>
+        </body>
+        </html>
+        """
+
         send_mail(
             subject,
-            message,
+            plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
+            html_message=html_message,
             fail_silently=False,
         )
         return user
