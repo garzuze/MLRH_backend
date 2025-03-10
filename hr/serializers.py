@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from clients.models import Client, ClientContact, ClientFee
-from .models import Profile, Resume, Position
+from .models import Profile, Report, Resume, Position
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -43,3 +43,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_str_representation(self, obj):
         return str(obj)
+    
+
+class ReportSerializer(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
+    resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
+
+    class Meta:
+        model = Report
+        fields = '__all__'

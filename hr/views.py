@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import permissions, viewsets, status
 from rest_framework.views import APIView
 
-from hr.models import Position, Profile, Resume
-from hr.serializers import PositionSerializer, ProfileSerializer, ResumeSerializer
+from hr.models import Position, Profile, Report, Resume
+from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer
 
 class GetResumeCPF(APIView):
     '''
@@ -61,3 +61,9 @@ class ResumeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
             
         return super().create(request, *args, **kwargs)
+    
+
+class ReportViewSet(viewsets.ModelViewSet):
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+    permission_classes = [permissions.IsAuthenticated]
