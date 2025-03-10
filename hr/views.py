@@ -1,7 +1,7 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import permissions, viewsets, status
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 
 from hr.models import Position, Profile, Report, Resume
 from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer
@@ -67,3 +67,15 @@ class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def search_resumes(request):
+    query = request.GET.get("q", "")
+
+    if query:
+        resumes = Resume.objects.filter(name__icontains=query)[:5]
+        print(resumes)
+        serializer = ResumeSerializer(resumes, many=True)
+        return Response(serializer.data)
+    return Response([])
