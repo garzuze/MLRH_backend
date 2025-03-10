@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Resume, Position
+
+from clients.models import Client, ClientContact, ClientFee
+from .models import Profile, Resume, Position
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -25,4 +27,15 @@ class ResumeSerializer(serializers.ModelSerializer):
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
+        fields = '__all__'
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
+    client_contact = serializers.PrimaryKeyRelatedField(queryset=ClientContact.objects.all())
+    position = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all())
+    fee = serializers.PrimaryKeyRelatedField(queryset=ClientFee.objects.all())
+
+    class Meta:
+        model = Profile
         fields = '__all__'
