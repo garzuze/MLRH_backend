@@ -35,7 +35,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     client_contact = serializers.PrimaryKeyRelatedField(queryset=ClientContact.objects.all())
     position = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all())
     fee = serializers.PrimaryKeyRelatedField(queryset=ClientFee.objects.all())
+    str_representation = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
         fields = '__all__'
+
+    def get_str_representation(self, obj):
+        return str(obj)
