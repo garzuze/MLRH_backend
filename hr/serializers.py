@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from clients.models import Client, ClientContact, ClientFee
-from .models import Profile, Report, Resume, Position
+from .models import Profile, Report, Resume, Position, WorkExperience
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -52,3 +52,21 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         fields = '__all__'
+
+
+class WorkExperienceSerializer(serializers.ModelSerializer):
+    resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all(), many=False)
+    resume = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = WorkExperience
+        fields = '__all__'
+        read_only_fields = ('resume', )
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        resume = Resume.objects.filter(user=user).first()
+        validated_data['resume'] = resume
+        return super().create(validated_data)
