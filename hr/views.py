@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 
 from hr.models import Position, Profile, Report, Resume
+from hr.permissions import IsAdminOrReadOnly
 from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer
 
 class GetResumeCPF(APIView):
@@ -30,7 +31,7 @@ class PositionViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class GetResume(viewsets.ModelViewSet):
@@ -66,7 +67,8 @@ class ResumeViewSet(viewsets.ModelViewSet):
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
+
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAdminUser])
