@@ -75,6 +75,16 @@ class WorkExperienceViewSet(viewsets.ModelViewSet):
     serializer_class = WorkExperienceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        """
+        If user is not superuser it only gets his work experience
+        """
+        user = self.request.user
+        resume = Resume.objects.filter(user=user).first()
+        if user.is_superuser:
+            return WorkExperience.objects.all()
+        return WorkExperience.objects.filter(resume=resume)
+
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAdminUser])
