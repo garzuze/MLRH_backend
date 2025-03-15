@@ -75,6 +75,19 @@ class WorkExperienceViewSet(viewsets.ModelViewSet):
     serializer_class = WorkExperienceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        resume = Resume.objects.filter(user=request.user).first()
+        start_date = request.data.get('start_date')
+        existing_experience = WorkExperience.objects.filter(resume=resume, start_date=start_date).first()
+        # update it if it already exists
+        if existing_experience:
+            serializer = self.get_serializer(existing_experience, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return super().create(request, *args, **kwargs)
+
     def get_queryset(self):
         """
         If user is not superuser it only gets his work experience
