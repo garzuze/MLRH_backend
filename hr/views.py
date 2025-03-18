@@ -34,19 +34,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class GetResume(viewsets.ModelViewSet):
-    serializer_class = ResumeSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        """
-        This view should return data associated
-        with the currently authenticated user.
-        """
-        user = self.request.user
-        return Resume.objects.filter(user=user)
-
-
 class ResumeViewSet(viewsets.ModelViewSet):
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
@@ -62,6 +49,15 @@ class ResumeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
             
         return super().create(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        """
+        If user is not superuser it only gets his resume
+        """
+        user = self.request.user
+        if user.is_superuser:
+            return Resume.objects.all()
+        return Resume.objects.filter(user=user)
     
 
 class ReportViewSet(viewsets.ModelViewSet):
