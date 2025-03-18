@@ -126,6 +126,21 @@ class Resume(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def availability(self):
+        availability_options = {
+            "available_full_time": "Horário comercial",
+            "available_morning_afternoon": "Manhã - Tarde",
+            "available_afternoon_night": "Tarde - Noite",
+            "available_night_shift": "Madrugada",
+            "available_1236": "Escala 12x36",
+            "available_as_substitute": "Folguista",
+        }
+
+        # [expression for item in iterable if condition]
+        selected_options = [text for field, text in availability_options.items() if getattr(self, field)]
+
+        return  ", ".join(selected_options)
 
     class Meta:
         verbose_name = "Currículo"
@@ -133,14 +148,12 @@ class Resume(models.Model):
 
 
 class WorkExperience(models.Model):
-    resume = models.ForeignKey(
-        Resume, on_delete=models.CASCADE, related_name="work_experiences")
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name="work_experiences")
     company_name = models.CharField(max_length=100)
     position_title = models.CharField(max_length=50)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
-    salary = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True)
+    salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     responsibilities = models.TextField()
     reason_for_leaving = models.CharField(
         max_length=100, null=True, blank=True)
@@ -348,6 +361,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.position.title} - {self.client.corporate_name}"
+
 
 class Report(models.Model):
     '''Parecer de uma vaga'''

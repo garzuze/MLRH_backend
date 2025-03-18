@@ -12,7 +12,7 @@ class ResumeSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-
+    availability = serializers.SerializerMethodField()
 
     class Meta:
         model = Resume
@@ -22,6 +22,9 @@ class ResumeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+    
+    def get_availability(self, obj):
+        return obj.availability()
 
 
 class PositionSerializer(serializers.ModelSerializer):
