@@ -91,6 +91,10 @@ class WorkExperienceViewSet(viewsets.ModelViewSet):
         user = self.request.user
         resume = Resume.objects.filter(user=user).first()
         if user.is_superuser:
+            resume_id = self.request.query_params.get("resume")
+            if resume_id:
+                resume = Resume.objects.filter(id=resume_id).first()
+                return WorkExperience.objects.filter(resume=resume)
             return WorkExperience.objects.all()
         return WorkExperience.objects.filter(resume=resume)
 
