@@ -51,11 +51,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
-
+    str_representation = serializers.SerializerMethodField()
+    
     class Meta:
         model = Report
         fields = '__all__'
 
+    def get_str_representation(self, obj):
+        return str(obj)
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all(), many=False)
