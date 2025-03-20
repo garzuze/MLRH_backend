@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -141,6 +142,11 @@ class Resume(models.Model):
         selected_options = [text for field, text in availability_options.items() if getattr(self, field)]
 
         return  ", ".join(selected_options)
+    
+    def age(self):
+        today = date.today()
+        
+        return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
 
     class Meta:
         verbose_name = "Currículo"

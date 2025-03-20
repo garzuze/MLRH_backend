@@ -13,6 +13,7 @@ class ResumeSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     availability = serializers.SerializerMethodField()
+    age = serializers.SerializerMethodField()
 
     class Meta:
         model = Resume
@@ -25,6 +26,9 @@ class ResumeSerializer(serializers.ModelSerializer):
     
     def get_availability(self, obj):
         return obj.availability()
+
+    def get_age(self, obj):
+        return obj.age()
 
 
 class PositionSerializer(serializers.ModelSerializer):
