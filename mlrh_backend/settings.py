@@ -114,8 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    "DATETIME_FORMAT": "%d/%m/%Y",
-    "DATE_FORMAT": "%d/%m/%Y",
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),

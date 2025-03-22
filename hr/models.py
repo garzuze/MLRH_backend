@@ -141,7 +141,7 @@ class Resume(models.Model):
         # [expression for item in iterable if condition]
         selected_options = [text for field, text in availability_options.items() if getattr(self, field)]
 
-        return  ", ".join(selected_options)
+        return  " | ".join(selected_options)
     
     def age(self):
         today = date.today()
