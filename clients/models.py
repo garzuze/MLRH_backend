@@ -58,7 +58,7 @@ class Client(models.Model):
     cnpj = models.CharField(max_length=20, null=True, blank=True)
     state = models.CharField(
         max_length=2, choices=State.choices, help_text="Abreviação do estado")
-    address = models.CharField(max_length=45)
+    address = models.CharField(max_length=144)
     trade_name = models.CharField(max_length=144, help_text="Nome fantasia")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

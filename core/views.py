@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 
-from hr.models import Resume
+from hr.models import Resume, WorkExperience
 
 from .serializers import RegistrationSerializer
 from rest_framework.views import APIView
@@ -91,82 +91,21 @@ def update_data(request):
     if request.method == "POST" and request.FILES["json_file"]:
         json_file = request.FILES["json_file"]
         data = json.load(json_file)
-        marital_status = {
-            "1": "S",
-            "2": "M",
-            "3": "D",
-            "4": "W",
-        }
-
-        int_to_boolean = {
-            "0": False,
-            "1": True,
-        }
-
-        education_level = {
-            "1": "EF",
-            "2": "EF",
-            "3": "EM",
-            "4": "ET",
-            "5": "GR",
-            "6": "GR",
-            "7": "PG",
-            "8": "ME",
-            "9": "DR",
-            "10": "DR",
-        }
-
-        languages = {"1": "1", "2": "2", "3": "3", "4": "3"}
-
         for item in data:
-            user = User.objects.create_user(
-                email=item["email"], password=item["telefoneCelular"]
+            resume = Resume.objects.get(cpf=item["cpf"])
+            for i in range(1, 3):
+                experience = WorkExperience.objects.create(
+                    resume=resume,
+                    company_name=item[f"empresa{i}"],
+                    position_title=item[f"funcao{i}"],
+                    start_date=item[f"dataAdmissao{i}"],
+                    end_date=item[f"dataDemissao{i}"],
+                    salary=item[f"salario{i}"],
+                    responsibilities=item[f"atividades{i}"],
+                    reason_for_leaving=item[f"motivoSaida{i}"],
             )
-            user.is_active = True
-            user.save()
-            # faltou cnh kkkkkkk,
             
-            resume = Resume.objects.create(
-                name=item["nome"],
-                cpf=item["cpf"],
-                gender=item["sexo"],
-                cnh=item["cnh"],
-                birth_date=item["dataNascimento"],
-                birth_place=item["localNascimento"],
-                marital_status=marital_status[item["estadoCivil"]],
-                spouse_name=item["nomeConjuge"],
-                spouse_profession=item["profissaoConjuge"],
-                has_children=int_to_boolean[item["temFilhos"]],
-                children_ages=item["idadeFilhos"],
-                is_smoker=int_to_boolean[item["fumante"]],
-                has_car=int_to_boolean[item["possuiCarro"]],
-                has_disability=int_to_boolean[item["pcd"]],
-                disability_cid=item["cidPcd"],
-                user=user,
-                address=f"{item["endereco"]} - {item["numero"]} - {item["complemento"]}",
-                neighborhood=item["bairro"],
-                city=item["cidade"],
-                state=item["estado"],
-                cep=item["cep"],
-                phone=item["telefoneCelular"],
-                contact_phone=item["telefoneRecado"],
-                email=item["email"],
-                education_level=education_level[item["nivelEscolaridade"]],
-                education_details=item["formacao"],
-                english_level=languages[item["idiomaIngles"]],
-                spanish_level=languages[item["idiomaEspanhol"]],
-                other_languages=item["idiomaOutros"],
-                computer_skills=item["informatica"],
-                additional_courses=item["outrosCursos"],
-                expected_salary=item["pretensaoSalarial"],
-                available_full_time=int_to_boolean[item["dispHorarioComercial"]],
-                available_morning_afternoon=int_to_boolean[item["dispManhaTarde"]],
-                available_afternoon_night=int_to_boolean[item["dispTardeNoite"]],
-                available_night_shift=int_to_boolean[item["dispMadrugada"]],
-                available_1236=int_to_boolean[item["disp1236"]],
-                available_as_substitute=int_to_boolean[item["dispFolguista"]],
-            )
-            resume.save()
+            experience.save()
         return render(request, "clients/success.html")
     return render(request, "clients/form.html")
 
