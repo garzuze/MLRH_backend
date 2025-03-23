@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from .models import Position, Resume, WorkExperience, Profile, Report
 
@@ -8,7 +9,7 @@ class ResumeAdmin(admin.ModelAdmin):
 
 class PositionAdmin(admin.ModelAdmin):
     list_display = ["id", "title"]
-    search_fields = ["title"]
+    search_fields = ["id", "title"]
 
 
 admin.site.register(Position, PositionAdmin)

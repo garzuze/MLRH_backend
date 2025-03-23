@@ -92,10 +92,14 @@ def update_data(request):
         json_file = request.FILES["json_file"]
         data = json.load(json_file)
         for item in data:
-            position = Position.objects.update_or_create(
-                id=item["id"],
-                title=item["title"]
-            )
+            position_list = []
+            for i in range(1, 4):
+                position_list.append(item[f"cargoDesejado{i}_id"])
+            print(position_list)
+            resume = Resume.objects.get(cpf=item["cpf"])
+            print(resume)
+            resume.desired_positions.add(*position_list)
+            resume.save()
             
         return render(request, "clients/success.html")
     return render(request, "clients/form.html")
