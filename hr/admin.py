@@ -6,7 +6,12 @@ class ResumeAdmin(admin.ModelAdmin):
     search_fields = ["name", "phone"]
 
 
-admin.site.register(Position)
+class PositionAdmin(admin.ModelAdmin):
+    list_display = ["id", "title"]
+    search_fields = ["title"]
+
+
+admin.site.register(Position, PositionAdmin)
 admin.site.register(Resume, ResumeAdmin)
 admin.site.register(WorkExperience)
 admin.site.register(Profile)

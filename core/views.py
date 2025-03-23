@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 
-from hr.models import Resume, WorkExperience
+from hr.models import Position, Resume, WorkExperience
 
 from .serializers import RegistrationSerializer
 from rest_framework.views import APIView
@@ -92,20 +92,11 @@ def update_data(request):
         json_file = request.FILES["json_file"]
         data = json.load(json_file)
         for item in data:
-            resume = Resume.objects.get(cpf=item["cpf"])
-            for i in range(1, 3):
-                experience = WorkExperience.objects.create(
-                    resume=resume,
-                    company_name=item[f"empresa{i}"],
-                    position_title=item[f"funcao{i}"],
-                    start_date=item[f"dataAdmissao{i}"],
-                    end_date=item[f"dataDemissao{i}"],
-                    salary=item[f"salario{i}"],
-                    responsibilities=item[f"atividades{i}"],
-                    reason_for_leaving=item[f"motivoSaida{i}"],
+            position = Position.objects.update_or_create(
+                id=item["id"],
+                title=item["title"]
             )
             
-            experience.save()
         return render(request, "clients/success.html")
     return render(request, "clients/form.html")
 
