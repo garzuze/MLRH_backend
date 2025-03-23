@@ -3,7 +3,7 @@ from .models import Position, Resume, WorkExperience, Profile, Report
 
 class ResumeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'cpf', 'state', 'email', 'phone']
-    search_fields = ['name", "phone']
+    search_fields = ["name", "phone"]
 
 
 admin.site.register(Position)
