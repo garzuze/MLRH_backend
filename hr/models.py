@@ -396,4 +396,4 @@ class Report(models.Model):
         verbose_name_plural = "Pareceres"
 
     def __str__(self):
-        return f"{self.profile.position.title} - {self.resume.name}"
+        return f"{self.profile.position.title} - {self.profile.client} - {self.resume.name}"
