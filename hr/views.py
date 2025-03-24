@@ -106,7 +106,17 @@ def search_resumes(request):
 
     if query:
         resumes = Resume.objects.filter(name__icontains=query)[:5]
-        print(resumes)
         serializer = ResumeSerializer(resumes, many=True)
+        return Response(serializer.data)
+    return Response([])
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def search_positions(request):
+    query = request.GET.get("q", "")
+
+    if query:
+        positions = Position.objects.filter(title__icontains=query)[:5]
+        serializer = PositionSerializer(positions, many=True)
         return Response(serializer.data)
     return Response([])
