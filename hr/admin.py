@@ -2,9 +2,14 @@ from django import forms
 from django.contrib import admin
 from .models import Position, Resume, WorkExperience, Profile, Report
 
+class WorkExperienceliner(admin.StackedInline):
+    model = WorkExperience
+
+
 class ResumeAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "cpf", "state", "email", "phone"]
     search_fields = ["name", "phone"]
+    inlines = [WorkExperienceliner]
 
 
 class PositionAdmin(admin.ModelAdmin):
@@ -24,7 +29,6 @@ class ProfileAdmin(admin.ModelAdmin):
         "client",
         "position",
     ]
-
 
 admin.site.register(Position, PositionAdmin)
 admin.site.register(Resume, ResumeAdmin)
