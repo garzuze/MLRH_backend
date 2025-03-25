@@ -34,7 +34,11 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class WorkExperienceAdmin(admin.ModelAdmin):
-    list_display = ["resume__name", "position_title", "company_name",]
+    list_display = [
+        "resume__name",
+        "position_title",
+        "company_name",
+    ]
     search_fields = [
         "resume__name",
         "company_name",
@@ -44,8 +48,23 @@ class WorkExperienceAdmin(admin.ModelAdmin):
     list_filter = ("resume",)
 
 
+class ReportAdmin(admin.ModelAdmin):
+    list_display = [
+        "profile__position__title",
+        "profile__client",
+        "resume__name",
+        "agreed_salary",
+    ]
+    ordering = ["profile__position__title"]
+    search_fields = [
+        "profile__position__title",
+        "profile__client",
+        "resume__name",
+    ]
+
+
 admin.site.register(Position, PositionAdmin)
 admin.site.register(Resume, ResumeAdmin)
 admin.site.register(WorkExperience, WorkExperienceAdmin)
 admin.site.register(Profile, ProfileAdmin)
-admin.site.register(Report)
+admin.site.register(Report, ReportAdmin)
