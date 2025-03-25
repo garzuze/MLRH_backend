@@ -2,8 +2,10 @@ from django import forms
 from django.contrib import admin
 from .models import Position, Resume, WorkExperience, Profile, Report
 
+
 class WorkExperienceliner(admin.StackedInline):
     model = WorkExperience
+    extra = 0
 
 
 class ResumeAdmin(admin.ModelAdmin):
@@ -30,8 +32,20 @@ class ProfileAdmin(admin.ModelAdmin):
         "position",
     ]
 
+
+class WorkExperienceAdmin(admin.ModelAdmin):
+    list_display = ["resume__name", "position_title", "company_name",]
+    search_fields = [
+        "resume__name",
+        "company_name",
+        "position_title",
+    ]
+    ordering = ["resume__name"]
+    list_filter = ("resume",)
+
+
 admin.site.register(Position, PositionAdmin)
 admin.site.register(Resume, ResumeAdmin)
-admin.site.register(WorkExperience)
+admin.site.register(WorkExperience, WorkExperienceAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Report)
