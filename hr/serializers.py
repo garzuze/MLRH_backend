@@ -43,6 +43,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     position = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all())
     fee = serializers.PrimaryKeyRelatedField(queryset=ClientFee.objects.all())
     str_representation = serializers.SerializerMethodField()
+    client_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -50,6 +51,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_str_representation(self, obj):
         return str(obj)
+    
+    def get_client_name(self, obj):
+        return obj.client.trade_name
     
 
 class ReportSerializer(serializers.ModelSerializer):
@@ -63,6 +67,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
     def get_str_representation(self, obj):
         return str(obj)
+    
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all(), many=False)

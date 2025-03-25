@@ -23,7 +23,7 @@ class GetResumeCPF(APIView):
 
 
 class PositionViewSet(viewsets.ModelViewSet):
-    queryset = Position.objects.all()
+    queryset = Position.objects.all().order_by("title")
     serializer_class = PositionSerializer
     permission_classes = [IsAdminOrReadOnly]
 
