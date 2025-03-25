@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import Position, Resume, WorkExperience, Profile, Report
 
 class ResumeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'cpf', 'state', 'email', 'phone']
+    list_display = ["id", "name", "cpf", "state", "email", "phone"]
     search_fields = ["name", "phone"]
 
 
@@ -12,8 +12,22 @@ class PositionAdmin(admin.ModelAdmin):
     search_fields = ["id", "title"]
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = [
+        "client",
+        "client_contact",
+        "position",
+        "status",
+        "estimated_delivery",
+    ]
+    search_fields = [
+        "client",
+        "position",
+    ]
+
+
 admin.site.register(Position, PositionAdmin)
 admin.site.register(Resume, ResumeAdmin)
 admin.site.register(WorkExperience)
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Report)

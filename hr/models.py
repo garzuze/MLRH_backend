@@ -365,7 +365,7 @@ class Profile(models.Model):
         verbose_name_plural = "Perfis"
 
     def __str__(self):
-        return f"{self.position.title} - {self.client.corporate_name}"
+        return f"{self.position.title}"
 
 
 class Report(models.Model):
