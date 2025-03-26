@@ -59,7 +59,7 @@ class Client(models.Model):
     state = models.CharField(
         max_length=2, choices=State.choices, help_text="Abreviação do estado")
     address = models.CharField(max_length=144)
-    trade_name = models.CharField(max_length=144, help_text="Nome fantasia")
+    trade_name = models.CharField(max_length=144, help_text="Nome fantasia", verbose_name="Nome fantasia")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     neighborhood = models.CharField(max_length=45)
@@ -91,7 +91,7 @@ class ClientContact(models.Model):
 
     client = models.ForeignKey(
         Client, on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name="Nome")
     department = models.CharField(max_length=50)
     phone = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)

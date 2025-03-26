@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 class Position(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, verbose_name="Cargo")
 
     def __str__(self):
         return self.title
@@ -61,7 +61,7 @@ class Resume(models.Model):
 
     STATUS_CHOICES = [("A", "Ativo"), ("I", "Inativo")]
 
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, verbose_name="Nome")
     cpf = models.CharField(max_length=14, unique=True)
     cnh = models.CharField(max_length=2, choices=Cnh.choices, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=Gender.choices)
@@ -86,13 +86,13 @@ class Resume(models.Model):
 
     # Contact Info
     address = models.CharField(max_length=100)
-    neighborhood = models.CharField(max_length=45)
-    city = models.CharField(max_length=45)
+    neighborhood = models.CharField(max_length=45, verbose_name="Bairro")
+    city = models.CharField(max_length=45, verbose_name="Cidade")
     state = models.CharField(
         max_length=2, choices=State.choices, help_text="Abreviação do estado"
     )
     cep = models.CharField(max_length=9)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, verbose_name="Telefone")
     contact_phone = models.CharField(
         max_length=15, null=True, blank=True, help_text="Telefone para contato"
     )
@@ -115,7 +115,7 @@ class Resume(models.Model):
         Position, related_name="resumes", blank=True
     )
     expected_salary = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True
+        max_digits=12, decimal_places=2, null=True, blank=True, verbose_name="Salário"
     )
 
     # Availability
@@ -210,6 +210,7 @@ class Profile(models.Model):
         related_name="profiles",
         help_text="Cliente associado a este perfil.",
         default=1,
+        verbose_name="Nome fantasia"
     )
 
     client_contact = models.ForeignKey(
@@ -226,6 +227,7 @@ class Profile(models.Model):
         related_name="profiles",
         help_text="Cargo associado ao perfil.",
         default=1,
+        verbose_name="Cargo"
     )
 
     fee = models.ForeignKey(

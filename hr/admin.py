@@ -6,7 +6,7 @@ from .models import Position, Resume, WorkExperience, Profile, Report
 class WorkExperienceInliner(admin.StackedInline):
     model = WorkExperience
     extra = 0
-
+    ordering = ("-start_date", )
 
 class ReportInliner(admin.StackedInline):
     model = Report
@@ -17,20 +17,23 @@ class ResumeAdmin(admin.ModelAdmin):
     def created(self, obj):
         return obj.created_at.strftime("%d/%m/%Y")
 
-    created.admin_order_field = "created"
+    created.admin_order_field = "created_at"
+    created.short_description = "Criado em"
 
     list_display = [
         "id",
         "name",
         "phone",
-        "email",
+        "expected_salary",
         "neighborhood",
         "city",
         "age",
         "position",
         "created",
     ]
+
     search_fields = ["name", "phone", "desired_positions__title"]
+    autocomplete_fields = ["desired_positions"]
     inlines = [WorkExperienceInliner]
 
 
@@ -43,8 +46,8 @@ class ProfileAdmin(admin.ModelAdmin):
     def created(self, obj):
         return obj.created_at.strftime("%d/%m/%Y")
 
-    created.admin_order_field = "created"
-
+    created.admin_order_field = "created_at"
+    created.short_description = "Criado em"
     list_display = [
         "client__trade_name",
         "client_contact__name",

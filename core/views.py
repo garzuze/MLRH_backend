@@ -138,12 +138,9 @@ def update_resume(request):
         languages = {"1": "1", "2": "2", "3": "3", "4": "3"}
 
         for item in data:
-            print(item["email"])
             user, created = User.objects.update_or_create(
                 email=item["email"], password=item["telefoneCelular"], is_active=True
             )
-            print(user)
-            print(created)
             resume = Resume.objects.update_or_create(
                 name=item["nome"],
                 cpf=item["cpf"],
@@ -161,7 +158,7 @@ def update_resume(request):
                 has_disability=int_to_boolean[item["pcd"]],
                 disability_cid=item["cidPcd"],
                 user=user,
-                address=f"{item["endereco"]} - {item["numero"]} - {item["complemento"]}",
+                address=f"{item['endereco']} - {item['numero']} - {item['complemento']}",
                 neighborhood=item["bairro"],
                 city=item["cidade"],
                 state=item["estado"],
@@ -188,16 +185,18 @@ def update_resume(request):
             for i in range(1, 4):
                 try:
                     position = Position.objects.get(id=item[f"cargoDesejado{i}_id"])
-                    position_list.append(item[f"cargoDesejado{i}_id"])
+                    print(position)
+                    if position != None:
+                        position_list.append(item[f"cargoDesejado{i}_id"])
                 except Position.DoesNotExist:
-                    print(f"não existe: {item[f"cargoDesejado{i}_id"]}")
+                    print(f"não existe: {item[f'cargoDesejado{i}_id']}")
                     
             resume = Resume.objects.get(cpf=item["cpf"])
             print(resume)
             print(position_list)
             resume.desired_positions.add(*position_list)
             resume.save()
-            for i in range(1, 3):
+            for i in range(1, 4):
                  experience, created = WorkExperience.objects.update_or_create(
                      resume=resume,
                      company_name=item[f"empresa{i}"],
