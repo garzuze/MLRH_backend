@@ -165,6 +165,9 @@ class Resume(models.Model):
             - self.birth_date.year
             - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         )
+    
+    def position(self):
+        return self.desired_positions.all().first() or "Nenhum"
 
     class Meta:
         verbose_name = "Currículo"

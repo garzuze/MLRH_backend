@@ -9,7 +9,11 @@ class WorkExperienceliner(admin.StackedInline):
 
 
 class ResumeAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "cpf", "state", "email", "phone"]
+    def created(self, obj):
+        return obj.created_at.strftime("%d/%m/%Y")
+    created.admin_order_field = "created"
+
+    list_display = ["id", "name", "phone", "neighborhood", "state", "age", "position","created"]
     search_fields = ["name", "phone"]
     inlines = [WorkExperienceliner]
 
