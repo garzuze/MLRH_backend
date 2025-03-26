@@ -369,7 +369,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.position.title}"
+    
 
+    def reports(self):
+        reports = Report.objects.filter(profile=self)
+        reports_list = []
+        for report in reports:
+            reports_list.append(report.resume.name)
+        return ", ".join(reports_list)
 
 class Report(models.Model):
     """Parecer de uma vaga"""

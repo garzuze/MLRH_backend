@@ -3,8 +3,13 @@ from django.contrib import admin
 from .models import Position, Resume, WorkExperience, Profile, Report
 
 
-class WorkExperienceliner(admin.StackedInline):
+class WorkExperienceInliner(admin.StackedInline):
     model = WorkExperience
+    extra = 0
+
+
+class ReportInliner(admin.StackedInline):
+    model = Report
     extra = 0
 
 
@@ -26,7 +31,7 @@ class ResumeAdmin(admin.ModelAdmin):
         "created",
     ]
     search_fields = ["name", "phone", "desired_positions__title"]
-    inlines = [WorkExperienceliner]
+    inlines = [WorkExperienceInliner]
 
 
 class PositionAdmin(admin.ModelAdmin):
@@ -46,6 +51,7 @@ class ProfileAdmin(admin.ModelAdmin):
         "position",
         "status",
         "created",
+        "reports"
     ]
 
     search_fields = [
@@ -54,6 +60,8 @@ class ProfileAdmin(admin.ModelAdmin):
     ]
 
     list_filter = ["status"]
+
+    inlines = [ReportInliner]
 
 
 class WorkExperienceAdmin(admin.ModelAdmin):
