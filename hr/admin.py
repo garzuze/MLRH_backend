@@ -11,10 +11,21 @@ class WorkExperienceliner(admin.StackedInline):
 class ResumeAdmin(admin.ModelAdmin):
     def created(self, obj):
         return obj.created_at.strftime("%d/%m/%Y")
+
     created.admin_order_field = "created"
 
-    list_display = ["id", "name", "phone", "neighborhood", "state", "age", "position","created"]
-    search_fields = ["name", "phone"]
+    list_display = [
+        "id",
+        "name",
+        "phone",
+        "email",
+        "neighborhood",
+        "city",
+        "age",
+        "position",
+        "created",
+    ]
+    search_fields = ["name", "phone", "desired_positions__title"]
     inlines = [WorkExperienceliner]
 
 
@@ -24,17 +35,25 @@ class PositionAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
+    def created(self, obj):
+        return obj.created_at.strftime("%d/%m/%Y")
+
+    created.admin_order_field = "created"
+
     list_display = [
-        "client",
-        "client_contact",
+        "client__trade_name",
+        "client_contact__name",
         "position",
         "status",
-        "estimated_delivery",
+        "created",
     ]
+
     search_fields = [
-        "client",
-        "position",
+        "client__trade_name",
+        "position__title",
     ]
+
+    list_filter = ["status"]
 
 
 class WorkExperienceAdmin(admin.ModelAdmin):
