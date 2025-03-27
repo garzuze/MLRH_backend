@@ -3,6 +3,12 @@
 import os
 import sys
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+
 
 def main():
     """Run administrative tasks."""

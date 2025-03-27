@@ -86,7 +86,7 @@ def get_client_fees(request):
     query = request.GET.get("q", "")
 
     if query:
-        client_fees = ClientFee.objects.filter(client__id=query)
+        client_fees = ClientFee.objects.filter(client__id=query).order_by('percentual')
         serializer = ClientFeeSerializer(client_fees, many=True)
         return Response(serializer.data)
     return Response([])
