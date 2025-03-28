@@ -2,7 +2,7 @@ from datetime import date
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from clients.models import Client, ClientContact, ClientFee, State
+from clients.models import Benefit, Client, ClientContact, ClientFee, State
 
 User = get_user_model()
 
@@ -372,6 +372,8 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.position.title}"
     
+    def location(self):
+        return f"{self.client.neighborhood} - {self.client.city}, {self.client.state}"
 
     def reports(self):
         reports = Report.objects.filter(profile=self)
@@ -379,6 +381,13 @@ class Profile(models.Model):
         for report in reports:
             reports_list.append(report.resume.name)
         return ", ".join(reports_list)
+    
+    def client_benefits(self):
+        benefits = self.client.benefits.all()
+        benefit_list = []
+        for benefit in benefits:
+            benefit_list.append(benefit.benefit)
+        return benefit_list
 
 class Report(models.Model):
     """Parecer de uma vaga"""

@@ -42,19 +42,23 @@ class ProfileSerializer(serializers.ModelSerializer):
     client_contact = serializers.PrimaryKeyRelatedField(queryset=ClientContact.objects.all())
     position = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all())
     fee = serializers.PrimaryKeyRelatedField(queryset=ClientFee.objects.all())
-    str_representation = serializers.SerializerMethodField()
-    client_name = serializers.SerializerMethodField()
+    location = serializers.SerializerMethodField()
+    position_str = serializers.SerializerMethodField()
+    benefits = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
         fields = '__all__'
 
-    def get_str_representation(self, obj):
-        return str(obj)
+    def get_location(self, obj):
+        return obj.location()
     
-    def get_client_name(self, obj):
-        return obj.client.trade_name
+    def get_position_str(self, obj):
+        return obj.position.title
     
+    def get_benefits(self, obj):
+        return obj.client_benefits()
+        
 
 class ReportSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
