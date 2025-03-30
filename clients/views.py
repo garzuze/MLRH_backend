@@ -5,9 +5,17 @@ from .serializers import ClientFeeSerializer, ClientSerializer, BenefitSerialize
 from rest_framework import permissions, viewsets, status
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [permissions.IsAdminUser]
+    filter_fields = ('id',)
+
+    def get_queryset(self):
+        id_value = self.request.query_params.get("id", None);
+        if id_value:
+            id_list = id_value.split(",")
+            queryset = Client.objects.filter(id__in=id_list)
+
+        return queryset
 
 
 class BenefitViewSet(viewsets.ModelViewSet):
