@@ -5,11 +5,11 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ("id", "email", "first_name", "last_name", "is_staff", "is_superuser")
+    list_display = ("id", "email", "is_active", "cpf",)
     
     fieldsets = (
         ("Basic Info", {"fields": ("email", "password")}),
-        ("Personal Info", {"fields": ("first_name", "last_name")}),
+        ("Personal Info", {"fields": ("first_name", "last_name", "cpf")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
     )
 
