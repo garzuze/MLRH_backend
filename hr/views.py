@@ -3,6 +3,7 @@ from rest_framework import permissions, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 
+from core.models import CustomUser
 from hr.models import Position, Profile, Report, Resume, WorkExperience
 from hr.permissions import IsAdminOrReadOnly
 from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer, WorkExperienceSerializer
@@ -13,8 +14,8 @@ class GetResumeCPF(APIView):
     '''
     def get(self, request):
         cpf = request.query_params.get('cpf')
-        
-        resume = Resume.objects.filter(cpf=cpf).first()
+        user = CustomUser.objects.filter(cpf=cpf).first()
+        resume = Resume.objects.filter(user=user).first()
         
         if resume:
             return Response({"message": True}, status=status.HTTP_200_OK)
@@ -40,8 +41,7 @@ class ResumeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        cpf = request.data.get('cpf')
-        existing_resume = Resume.objects.filter(user=request.user, cpf=cpf).first()
+        existing_resume = Resume.objects.filter(user=request.user).first()
         if existing_resume:
             serializer = self.get_serializer(existing_resume, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)

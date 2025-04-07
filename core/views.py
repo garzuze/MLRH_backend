@@ -96,7 +96,7 @@ def update_data(request):
             for i in range(1, 4):
                 position_list.append(item[f"cargoDesejado{i}_id"])
             print(position_list)
-            resume = Resume.objects.get(cpf=item["cpf"])
+            resume = Resume.objects.get(phone=item["telefoneCelular"])
             print(resume)
             resume.desired_positions.add(*position_list)
             resume.save()
@@ -139,11 +139,10 @@ def update_resume(request):
 
         for item in data:
             user, created = User.objects.update_or_create(
-                email=item["email"], password=item["telefoneCelular"], is_active=True
+                email=item["email"], password=item["telefoneCelular"], cpf=item["cpf"], is_active=True
             )
             resume = Resume.objects.update_or_create(
                 name=item["nome"],
-                cpf=item["cpf"],
                 gender=item["sexo"],
                 cnh=item["cnh"],
                 birth_date=item["dataNascimento"],
@@ -191,7 +190,7 @@ def update_resume(request):
                 except Position.DoesNotExist:
                     print(f"não existe: {item[f'cargoDesejado{i}_id']}")
                     
-            resume = Resume.objects.get(cpf=item["cpf"])
+            resume = Resume.objects.get(phone=item["telefoneCelular"])
             print(resume)
             print(position_list)
             resume.desired_positions.add(*position_list)
