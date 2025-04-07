@@ -1,4 +1,5 @@
 from base64 import urlsafe_b64encode
+import os
 from django.urls import reverse
 from rest_framework import serializers
 from django.core.mail import send_mail
@@ -18,7 +19,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'is_active')
+        fields = ('email', 'password', 'cpf', 'is_active')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -29,7 +30,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         token = generate_email_verification_token.make_token(user)
-        verification_url = f"http://localhost:5173/verify-email?uid={user.id}&token={token}"
+        verification_url = f"{os.environ.get('FRONTEND_URL')}/verify-email?uid={user.id}&token={token}"
 
         subject = "Verifique seu email"
         plain_message = (

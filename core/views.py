@@ -44,6 +44,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             "email": user.email,
             "first_name": user.first_name,
             "last_name": user.last_name,
+            "cpf": user.cpf,
             "is_active": user.is_active,
             "is_staff": user.is_staff,
             "is_superuser": user.is_superuser,
@@ -77,7 +78,7 @@ class VerifyEmailAPIView(APIView):
             user.is_active = True
             user.save()
             return Response(
-                {"message": "Email verified successfully."}, status=status.HTTP_200_OK
+                {"message": "Email verified successfully.", "email": user.email}, status=status.HTTP_200_OK
             )
         else:
             return Response(

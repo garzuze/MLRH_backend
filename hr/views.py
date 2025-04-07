@@ -15,9 +15,8 @@ class GetResumeCPF(APIView):
     def get(self, request):
         cpf = request.query_params.get('cpf')
         user = CustomUser.objects.filter(cpf=cpf).first()
-        resume = Resume.objects.filter(user=user).first()
         
-        if resume:
+        if user:
             return Response({"message": True}, status=status.HTTP_200_OK)
         else:
             return Response({"message": False}, status=status.HTTP_204_NO_CONTENT)
