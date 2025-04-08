@@ -14,6 +14,7 @@ class ResumeSerializer(serializers.ModelSerializer):
     )
     availability = serializers.SerializerMethodField()
     age = serializers.SerializerMethodField()
+    positions_str = serializers.SerializerMethodField()
 
     class Meta:
         model = Resume
@@ -30,6 +31,8 @@ class ResumeSerializer(serializers.ModelSerializer):
     def get_age(self, obj):
         return obj.age()
 
+    def get_positions_str(self, obj):
+        return obj.positions_str()
 
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:

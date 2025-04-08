@@ -157,6 +157,12 @@ class Resume(models.Model):
 
         return " | ".join(selected_options)
 
+    def positions_str(self):
+        positions = []
+        for position in self.desired_positions.all():
+            positions.append(position.title)
+        return " | ".join(positions)
+
     def age(self):
         today = date.today()
 
