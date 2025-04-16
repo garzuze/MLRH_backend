@@ -207,6 +207,11 @@ class ProfileStatus(models.TextChoices):
     SELECTION = "S", "Seleção"
 
 
+class ProfileContractTypes(models.TextChoices):
+    CLT = "CLT", "CLT"
+    PJ = "PJ", "PJ"
+    EST = "EST", "Estágio"
+
 class Profile(models.Model):
     """Perfil de uma vaga ou posição dentro de uma empresa."""
 
@@ -253,6 +258,13 @@ class Profile(models.Model):
         choices=ProfileStatus.choices,
         default=ProfileStatus.ACTIVE,
         help_text="Status do perfil: Aberto, Fechado, Cancelado, Seleção.",
+    )
+
+    contract_type = models.CharField(
+        max_length=3,
+        choices=ProfileContractTypes.choices,
+        default=ProfileContractTypes.CLT,
+        help_text="Tipo do contrato: CLT, PJ, Estágio.",
     )
 
     deadline = models.IntegerField(
@@ -394,6 +406,7 @@ class Profile(models.Model):
         for benefit in benefits:
             benefit_list.append(benefit.benefit)
         return benefit_list
+
 
 class Report(models.Model):
     """Parecer de uma vaga"""
