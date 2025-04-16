@@ -20,7 +20,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
+    ordering = ("-id", )
     search_fields = ("email",)
-    ordering = ("email",)
 
 admin.site.register(User, CustomUserAdmin)

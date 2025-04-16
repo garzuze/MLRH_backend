@@ -201,10 +201,10 @@ class WorkExperience(models.Model):
 
 
 class ProfileStatus(models.TextChoices):
-    ACTIVE = "A", "Ativo"
-    INACTIVE = "I", "Inativo"
+    ACTIVE = "A", "Aberto"
+    CLOSED = "F", "Fechado"
     CANCELED = "C", "Cancelado"
-    SUSPENDED = "S", "Suspenso"
+    SELECTION = "S", "Seleção"
 
 
 class Profile(models.Model):
@@ -252,7 +252,7 @@ class Profile(models.Model):
         max_length=1,
         choices=ProfileStatus.choices,
         default=ProfileStatus.ACTIVE,
-        help_text="Status do perfil: Ativo (A), Inativo (I), Cancelado (C) ou Suspenso (S).",
+        help_text="Status do perfil: Aberto, Fechado, Cancelado, Seleção.",
     )
 
     deadline = models.IntegerField(
@@ -421,6 +421,7 @@ class Report(models.Model):
     class Meta:
         verbose_name = "Parecer"
         verbose_name_plural = "Pareceres"
+        ordering = ["-updated_at"]
 
     def __str__(self):
         return f"{self.profile.position.title} - {self.profile.client.trade_name} - {self.resume.name}"
