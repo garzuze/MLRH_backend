@@ -14,11 +14,11 @@ class ReportInliner(admin.StackedInline):
 
 
 class ResumeAdmin(admin.ModelAdmin):
-    def created(self, obj):
-        return obj.created_at.strftime("%d/%m/%Y")
+    def updated(self, obj):
+        return obj.updated_at.strftime("%d/%m/%Y")
 
-    created.admin_order_field = "created_at"
-    created.short_description = "Criado em"
+    updated.admin_order_field = "updated_at"
+    updated.short_description = "Atualizado em"
 
     list_display = [
         "id",
@@ -29,7 +29,7 @@ class ResumeAdmin(admin.ModelAdmin):
         "city",
         "age",
         "position",
-        "created",
+        "updated",
     ]
 
     search_fields = ["name", "phone", "desired_positions__title"]

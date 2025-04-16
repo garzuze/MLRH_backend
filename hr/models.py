@@ -50,14 +50,16 @@ class Cnh(models.TextChoices):
     E = "E", "E"
 
 
+class LanguageLevels(models.TextChoices):
+    N = "N", "Nenhum conhecimento"
+    B = "B", "Básico"
+    I = "I", "Intermediário"
+    A = "A", "Avançado"
+    F = "F", "Fluente"
+
+
 class Resume(models.Model):
     """Currículo de um candidato"""
-
-    LANGUAGE_LEVEL_CHOICES = [
-        (1, "Básico"),
-        (2, "Intermediário"),
-        (3, "Fluente"),
-    ]
 
     STATUS_CHOICES = [("A", "Ativo"), ("I", "Inativo")]
 
@@ -104,8 +106,12 @@ class Resume(models.Model):
         choices=EducationLevel.choices, max_length=2, help_text="Nível de escolaridade"
     )
     education_details = models.TextField()
-    english_level = models.IntegerField(choices=LANGUAGE_LEVEL_CHOICES)
-    spanish_level = models.IntegerField(choices=LANGUAGE_LEVEL_CHOICES)
+    english_level = models.CharField(
+        max_length=1, choices=LanguageLevels.choices, default=LanguageLevels.N
+    )
+    spanish_level = models.CharField(
+        max_length=1, choices=LanguageLevels.choices, default=LanguageLevels.N
+    )
     other_languages = models.CharField(max_length=45, null=True, blank=True)
     computer_skills = models.TextField(null=True, blank=True)
     additional_courses = models.TextField(null=True, blank=True)
@@ -171,13 +177,14 @@ class Resume(models.Model):
             - self.birth_date.year
             - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         )
-    
+
     def position(self):
         return self.desired_positions.all().first() or "Nenhum"
 
     class Meta:
         verbose_name = "Currículo"
         verbose_name_plural = "Currículos"
+        ordering = ("-updated_at", )
 
 
 class WorkExperience(models.Model):
@@ -198,6 +205,7 @@ class WorkExperience(models.Model):
     class Meta:
         verbose_name = "Experiência"
         verbose_name_plural = "Experiências"
+        ordering = ("-start_date",)
 
 
 class ProfileStatus(models.TextChoices):
@@ -212,6 +220,7 @@ class ProfileContractTypes(models.TextChoices):
     PJ = "PJ", "PJ"
     EST = "EST", "Estágio"
 
+
 class Profile(models.Model):
     """Perfil de uma vaga ou posição dentro de uma empresa."""
 
@@ -221,7 +230,7 @@ class Profile(models.Model):
         related_name="profiles",
         help_text="Cliente associado a este perfil.",
         default=1,
-        verbose_name="Nome fantasia"
+        verbose_name="Nome fantasia",
     )
 
     client_contact = models.ForeignKey(
@@ -238,7 +247,7 @@ class Profile(models.Model):
         related_name="profiles",
         help_text="Cargo associado ao perfil.",
         default=1,
-        verbose_name="Cargo"
+        verbose_name="Cargo",
     )
 
     fee = models.ForeignKey(
@@ -389,7 +398,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.position.title}"
-    
+
     def location(self):
         return f"{self.client.neighborhood} - {self.client.city}, {self.client.state}"
 
@@ -399,7 +408,7 @@ class Profile(models.Model):
         for report in reports:
             reports_list.append(report.resume.name)
         return ", ".join(reports_list)
-    
+
     def client_benefits(self):
         benefits = self.client.benefits.all()
         benefit_list = []
