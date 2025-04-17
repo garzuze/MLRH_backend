@@ -64,7 +64,6 @@ class Resume(models.Model):
     STATUS_CHOICES = [("A", "Ativo"), ("I", "Inativo")]
 
     name = models.CharField(max_length=60, verbose_name="Nome")
-    cpf = models.CharField(max_length=14, unique=True)
     cnh = models.CharField(max_length=2, choices=Cnh.choices, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=Gender.choices)
     birth_date = models.DateField()
@@ -98,7 +97,6 @@ class Resume(models.Model):
     contact_phone = models.CharField(
         max_length=15, null=True, blank=True, help_text="Telefone para contato"
     )
-    email = models.EmailField(max_length=100)
     linkedin = models.URLField(null=True, blank=True)
 
     # Education & Skills
@@ -426,7 +424,6 @@ class Report(models.Model):
     test_result = models.TextField(blank=True)
     personal_family_context = models.TextField(blank=True)
     educational_background = models.TextField(blank=True)
-    professional_summary = models.TextField(blank=True)
     candidate_profile = models.TextField(blank=True)
     career_objectives = models.TextField(blank=True)
     final_considerations = models.TextField(blank=True)
