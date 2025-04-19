@@ -105,6 +105,25 @@ def update_data(request):
         return render(request, "clients/success.html")
     return render(request, "clients/form.html")
 
+def update_languages(request):
+    for r in Resume.objects.all():
+        if r.spanish_level == "1":
+            r.spanish_level = "N"
+        elif r.spanish_level == "2":
+            r.spanish_level = "I"
+        elif r.spanish_level == "3":
+            r.spanish_level = "F"
+
+        if r.english_level == "1":
+            r.english_level = "N"
+        elif r.english_level == "2":
+            r.spanish_level = "I"
+        elif r.english_level == "3":
+            r.english_level = "F"
+
+        r.save()
+
+    return render(request, "clients/success.html")
 
 def update_resume(request):
     if request.method == "POST" and request.FILES["json_file"]:
