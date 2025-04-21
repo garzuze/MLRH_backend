@@ -67,6 +67,7 @@ class ReportSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
     str_representation = serializers.SerializerMethodField()
+    user_data = serializers.SerializerMethodField()
     
     class Meta:
         model = Report
@@ -75,6 +76,9 @@ class ReportSerializer(serializers.ModelSerializer):
     def get_str_representation(self, obj):
         return str(obj)
     
+    def get_user_data(self, obj):
+        return [obj.resume.user.email, obj.resume.user.cpf]
+
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all(), many=False)
