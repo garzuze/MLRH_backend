@@ -1,13 +1,18 @@
 from django.urls import path
+from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from .views import (
     CustomTokenObtainPairView,
     RegistrationView,
+    UserViewSet,
     VerifyEmailAPIView,
     update_data,
     update_languages,
     update_resume,
 )
+router = routers.DefaultRouter()
+
+router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
     path("api/token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -19,3 +24,5 @@ urlpatterns = [
     path("api/register/", RegistrationView.as_view(), name="register"),
     path("api/verify-email/", VerifyEmailAPIView.as_view(), name="verify-email"),
 ]
+
+urlpatterns += router.urls

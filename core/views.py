@@ -1,15 +1,16 @@
 import json
 from django.shortcuts import get_object_or_404, render
-from clients.models import Client, ClientContact
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
 
 from hr.models import Position, Resume, WorkExperience
 
-from .serializers import RegistrationSerializer
+from .serializers import RegistrationSerializer, UserSerializer
 from rest_framework.views import APIView
+from rest_framework import permissions, viewsets, status
 from rest_framework import generics
 from rest_framework import status
 from .utils import generate_email_verification_token
@@ -17,6 +18,10 @@ from .utils import generate_email_verification_token
 
 User = get_user_model()
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
@@ -86,7 +91,8 @@ class VerifyEmailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
 def update_data(request):
     """Recuperar dados de sistema antigo a partir de arquivos JSON"""
     if request.method == "POST" and request.FILES["json_file"]:
@@ -104,7 +110,8 @@ def update_data(request):
 
         return render(request, "clients/success.html")
     return render(request, "clients/form.html")
-
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
 def update_languages(request):
     for r in Resume.objects.all():
         if r.spanish_level == "1":
@@ -125,6 +132,8 @@ def update_languages(request):
 
     return render(request, "clients/success.html")
 
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
 def update_resume(request):
     if request.method == "POST" and request.FILES["json_file"]:
         json_file = request.FILES["json_file"]

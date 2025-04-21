@@ -107,3 +107,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
             fail_silently=False,
         )
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = fields = ['id', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser', 'cpf']
+
