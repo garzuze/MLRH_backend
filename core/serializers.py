@@ -20,17 +20,28 @@ User = get_user_model()
 # TODO: customize it so the link points to a route in the frontend
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    confirm_email = serializers.CharField(
+        write_only=True,
+        required=False,
+        allow_blank=True,
+        help_text="honeypot"
+    )
+
     class Meta:
         model = User
-        fields = ('email', 'password', 'cpf', 'is_active')
+        fields = ('email', 'password', 'cpf', 'is_active', 'confirm_email')
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def validate(self, data):
+        if data.get('confirm_email'):
+            raise serializers.ValidationError("Bot detected.")
         return data
 
+
     def create(self, validated_data):
+        validated_data.pop('confirm_email', None)
         user = User.objects.create_user(**validated_data)
         token = generate_email_verification_token.make_token(user)
         verification_url = f"{os.environ.get('FRONTEND_URL')}/verify-email?uid={user.id}&token={token}"
