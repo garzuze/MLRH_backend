@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError, ParseError
 from rest_framework import serializers
 from django.core.mail import send_mail
 from django.conf import settings
-from .utils import generate_email_verification_token
+from .utils import generate_email_verification_token, validate_cpf
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -35,6 +35,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
+        if not validate_cpf(data.get('cpf')):
+            raise serializers.ValidationError("CPF inválido.")
+
         if data.get('confirm_email'):
             raise serializers.ValidationError("Bot detected.")
         return data
