@@ -1,6 +1,10 @@
 from base64 import urlsafe_b64encode
 import os
+from smtplib import SMTPException
+from django.http import BadHeaderError
 from django.urls import reverse
+from rest_framework.exceptions import ValidationError, ParseError
+
 from rest_framework import serializers
 from django.core.mail import send_mail
 from django.conf import settings
@@ -16,7 +20,6 @@ User = get_user_model()
 # TODO: customize it so the link points to a route in the frontend
 
 class RegistrationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('email', 'password', 'cpf', 'is_active')
@@ -98,7 +101,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         </html>
         """
 
-        send_mail(
+        # http://stackoverflow.com/questions/41457565/how-to-catch-email-sending-exceptions-in-django-1-10
+        try:
+            send_mail(
             subject,
             plain_message,
             settings.DEFAULT_FROM_EMAIL,
@@ -106,6 +111,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
             html_message=html_message,
             fail_silently=False,
         )
+        except BadHeaderError:              # If mail's Subject is not properly formatted.
+            print('Invalid header found.')
+            user.delete()
+            raise ValidationError
+        except SMTPException as e:          # It will catch other errors related to SMTP.
+            user.delete()
+            print('There was an error sending an email.'+ e)
+            raise ValidationError
+        except:                             # It will catch All other possible errors.
+            user.delete()
+            print("Mail Sending Failed!")
+            raise ValidationError
+
         return user
 
 class UserSerializer(serializers.ModelSerializer):

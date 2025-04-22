@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 
+from core.throttles import SignupRateThrottle
 from hr.models import Position, Resume, WorkExperience
 
 from .serializers import RegistrationSerializer, UserSerializer
@@ -242,3 +243,4 @@ def update_resume(request):
 
 class RegistrationView(generics.CreateAPIView):
     serializer_class = RegistrationSerializer
+    throttle_classes = [SignupRateThrottle]
