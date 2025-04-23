@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class State(models.TextChoices):
     AC = 'AC', 'Acre'
     AL = 'AL', 'Alagoas'
@@ -70,6 +69,7 @@ class Client(models.Model):
         null=True, blank=True, help_text="Número de empregados")
     economic_activity = models.ForeignKey(
         EconomicActivity, on_delete=models.SET_NULL, null=True)
+    description = models.CharField(verbose_name="Descrição", max_length=144, help_text="Descrição", blank=True, null=True)
 
     benefits = models.ManyToManyField(Benefit, related_name="clients", blank=True)
 

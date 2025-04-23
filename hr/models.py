@@ -97,7 +97,7 @@ class Resume(models.Model):
     contact_phone = models.CharField(
         max_length=15, null=True, blank=True, help_text="Telefone para contato"
     )
-    linkedin = models.URLField(null=True, blank=True)
+    linkedin = models.TextField(null=True, blank=True)
 
     # Education & Skills
     education_level = models.CharField(
