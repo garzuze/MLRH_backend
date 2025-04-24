@@ -1,10 +1,11 @@
 from rest_framework import routers
 from django.urls import path
 
-from hr.views import GetResumeCPF, PositionViewSet, ProfileViewSet, ReportViewSet, ResumeViewSet, WorkExperienceViewSet, search_resumes, search_positions
+from hr.views import GetResumeCPF, PositionViewSet, ProfileViewSet, ReportViewSet, ResumeViewSet, SlimResumeViewSet, WorkExperienceViewSet, search_resumes, search_positions
 
 router = routers.DefaultRouter()
 router.register(r'resume', ResumeViewSet, basename='resume')
+router.register(r'slim_resume', SlimResumeViewSet, basename='slim_resume')
 router.register(r'positions', PositionViewSet, basename='positions')
 router.register(r'profile', ProfileViewSet, basename='profile')
 router.register(r'report', ReportViewSet, basename='report')
