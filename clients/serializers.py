@@ -1,33 +1,36 @@
 from rest_framework import serializers
 from .models import Client, Benefit, ClientFee, EconomicActivity, ClientContact, Service
 
+
 class EconomicActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = EconomicActivity
-        fields = ['id', 'title']
+        fields = ["id", "title"]
+
 
 class BenefitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Benefit
-        fields = ['id', 'benefit']
+        fields = ["id", "benefit"]
+
 
 class ClientSerializer(serializers.ModelSerializer):
-    benefits = serializers.PrimaryKeyRelatedField(queryset=Benefit.objects.all(), many=True)
-    economic_activity = serializers.PrimaryKeyRelatedField(queryset=EconomicActivity.objects.all())
+    benefits = serializers.PrimaryKeyRelatedField(
+        queryset=Benefit.objects.all(), many=True
+    )
+    economic_activity = serializers.PrimaryKeyRelatedField(
+        queryset=EconomicActivity.objects.all()
+    )
 
     class Meta:
         model = Client
-        fields = [
-            'id', 'corporate_name', 'trade_name', 'cnpj', 'cep', 'address',
-            'neighborhood', 'city', 'state', 'state_registration', 'number_of_employees',
-            'economic_activity', 'benefits'
-        ]
+        fields = "__all__"
 
 
 class ClientMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ['id', 'corporate_name']
+        fields = ["id", "corporate_name"]
 
 
 class ClientContactSerializer(serializers.ModelSerializer):

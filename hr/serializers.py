@@ -67,6 +67,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     location = serializers.SerializerMethodField()
     position_str = serializers.SerializerMethodField()
     benefits = serializers.SerializerMethodField()
+    client_description = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -80,6 +81,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_benefits(self, obj):
         return obj.client_benefits()
+    
+    def get_client_description(self, obj):
+        return obj.client.description
 
 
 class ReportSerializer(serializers.ModelSerializer):
