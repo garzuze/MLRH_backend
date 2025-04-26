@@ -15,6 +15,7 @@ class ResumeSerializer(serializers.ModelSerializer):
     availability = serializers.SerializerMethodField()
     age = serializers.SerializerMethodField()
     positions_str = serializers.SerializerMethodField()
+    user_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Resume
@@ -33,6 +34,9 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     def get_positions_str(self, obj):
         return obj.positions_str()
+    
+    def get_user_data(self, obj):
+        return {"email": obj.user.email, "cpf": obj.user.cpf}
 
 
 class SlimResumeSerializer(ResumeSerializer):
@@ -41,6 +45,7 @@ class SlimResumeSerializer(ResumeSerializer):
     class Meta:
         model = Resume
         fields = [
+            "id",
             "name",
             "phone",
             "expected_salary",
