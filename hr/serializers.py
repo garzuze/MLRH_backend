@@ -63,6 +63,11 @@ class ResumeSerializer(serializers.ModelSerializer):
 
 class SlimResumeSerializer(ResumeSerializer):
     """Reduced Resume Serializer for working with Resume tables"""
+    work_experiences = WorkExperienceSerializer(
+        many=True,
+        read_only=True,
+    )
+
     class Meta:
         model = Resume
         fields = [
@@ -76,6 +81,7 @@ class SlimResumeSerializer(ResumeSerializer):
             "positions_str",
             "updated_at",
             "desired_positions",
+            "work_experiences"
         ]
 
 class PositionSerializer(serializers.ModelSerializer):
