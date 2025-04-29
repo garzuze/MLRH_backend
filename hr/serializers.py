@@ -6,6 +6,28 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+class WorkExperienceSerializer(serializers.ModelSerializer):
+    resume = serializers.PrimaryKeyRelatedField(
+        queryset=Resume.objects.all(), many=False
+    )
+    resume = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = WorkExperience
+        fields = "__all__"
+        read_only_fields = ("resume",)
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        resume = Resume.objects.filter(user=user).first()
+        validated_data["resume"] = resume
+        return super().create(validated_data)
+
+    def get_user_data(self, obj):
+        return [obj.resume.user.email, obj.resume.user.cpf]
+
+
 class ResumeSerializer(serializers.ModelSerializer):
     desired_positions = serializers.PrimaryKeyRelatedField(
         queryset=Position.objects.all(), many=True
@@ -34,14 +56,13 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     def get_positions_str(self, obj):
         return obj.positions_str()
-    
+
     def get_user_data(self, obj):
         return {"email": obj.user.email, "cpf": obj.user.cpf}
 
 
 class SlimResumeSerializer(ResumeSerializer):
     """Reduced Resume Serializer for working with Resume tables"""
-    
     class Meta:
         model = Resume
         fields = [
@@ -54,6 +75,7 @@ class SlimResumeSerializer(ResumeSerializer):
             "age",
             "positions_str",
             "updated_at",
+            "desired_positions",
         ]
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -86,7 +108,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_benefits(self, obj):
         return obj.client_benefits()
-    
+
     def get_client_description(self, obj):
         return obj.client.description
 
@@ -103,24 +125,3 @@ class ReportSerializer(serializers.ModelSerializer):
 
     def get_str_representation(self, obj):
         return str(obj)
-
-    def get_user_data(self, obj):
-        return [obj.resume.user.email, obj.resume.user.cpf]
-
-
-class WorkExperienceSerializer(serializers.ModelSerializer):
-    resume = serializers.PrimaryKeyRelatedField(
-        queryset=Resume.objects.all(), many=False
-    )
-    resume = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = WorkExperience
-        fields = "__all__"
-        read_only_fields = ("resume",)
-
-    def create(self, validated_data):
-        user = self.context["request"].user
-        resume = Resume.objects.filter(user=user).first()
-        validated_data["resume"] = resume
-        return super().create(validated_data)
