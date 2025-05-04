@@ -136,4 +136,4 @@ class AccountsReceivableTitle(models.Model):
         verbose_name_plural = "Títulos a receber"
 
     def __str__(self):
-        return f"{self.document or 'Sem documento'} - Cliente: {self.client}"
+        return f"{self.document or 'Sem documento'} - {self.client.trade_name} - R$ {self.amount}"
