@@ -1,20 +1,20 @@
 from rest_framework import serializers
-from finance.models import AccountsPayableTitle, AccountsReceivableTitle
+from finance.models import PayableTitle, ReceivableTitle
 
 
-class AccountsReceivableTitleSerializer(serializers.ModelSerializer):
+class ReceivableTitleSerializer(serializers.ModelSerializer):
     str_representation = serializers.SerializerMethodField()
 
     class Meta:
-        model = AccountsReceivableTitle
+        model = ReceivableTitle
         fields = '__all__'
 
     def get_str_representation(self, obj):
         return str(obj)
 
 
-class AccountsPayableTitleSerializer(serializers.ModelSerializer):
+class PayableTitleSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = AccountsPayableTitle
+        model = PayableTitle
         fields = '__all__'

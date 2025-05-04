@@ -3,7 +3,7 @@ from django.db import models
 from clients.models import Client
 from hr.models import Profile
 
-class AccountsPayableTitle(models.Model):
+class PayableTitle(models.Model):
     """Título de contas a pagar."""
     issue_date = models.DateField(
         null=True, 
@@ -74,7 +74,7 @@ class AccountsPayableTitle(models.Model):
     def __str__(self):
         return f"{self.document_number} - {self.supplier or 'Desconhecido'}"
     
-class AccountsReceivableTitle(models.Model):
+class ReceivableTitle(models.Model):
     """Título de contas a receber."""
 
     document = models.CharField(

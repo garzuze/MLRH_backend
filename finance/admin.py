@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AccountsReceivableTitle, AccountsPayableTitle
+from .models import ReceivableTitle, PayableTitle
 
-admin.site.register(AccountsReceivableTitle)
-admin.site.register(AccountsPayableTitle)
+admin.site.register(ReceivableTitle)
+admin.site.register(PayableTitle)

@@ -1,15 +1,15 @@
 from rest_framework import permissions, viewsets
 
-from finance.models import AccountsPayableTitle, AccountsReceivableTitle
-from finance.serializers import AccountsPayableTitleSerializer, AccountsReceivableTitleSerializer
+from finance.models import PayableTitle, ReceivableTitle
+from finance.serializers import PayableTitleSerializer, ReceivableTitleSerializer
 
-class AccountsReceivableTitleViewSet(viewsets.ModelViewSet):
-    queryset = AccountsReceivableTitle.objects.all()
-    serializer_class = AccountsReceivableTitleSerializer
+class ReceivableTitleViewSet(viewsets.ModelViewSet):
+    queryset = ReceivableTitle.objects.all()
+    serializer_class = ReceivableTitleSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
-class AccountsPayableTitleViewSet(viewsets.ModelViewSet):
-    queryset = AccountsPayableTitle.objects.all()
-    serializer_class = AccountsPayableTitleSerializer
+class PayableTitleViewSet(viewsets.ModelViewSet):
+    queryset = PayableTitle.objects.all()
+    serializer_class = PayableTitleSerializer
     permission_classes = [permissions.IsAdminUser]

@@ -5,8 +5,8 @@ from .views import *
 
 router = routers.DefaultRouter()
 
-router.register(r'receivable_title', AccountsReceivableTitleViewSet, basename='receivable_title')
-router.register(r'payable_title', AccountsPayableTitleViewSet, basename='payable_title')
+router.register(r'receivable_title', ReceivableTitleViewSet, basename='receivable_title')
+router.register(r'payable_title', PayableTitleViewSet, basename='payable_title')
 
 
 urlpatterns = router.urls
