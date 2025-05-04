@@ -123,7 +123,6 @@ class ReportSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
     str_representation = serializers.SerializerMethodField()
-    user_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
