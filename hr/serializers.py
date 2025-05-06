@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 
 from clients.models import Client, ClientContact, ClientFee
 from .models import Profile, Report, Resume, Position, WorkExperience
@@ -11,19 +11,28 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(
         queryset=Resume.objects.all(), many=False
     )
-    resume = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = WorkExperience
         fields = "__all__"
         read_only_fields = ("resume",)
-
-    def create(self, validated_data):
+    
+    def validate(self, data):
         user = self.context["request"].user
-        resume = Resume.objects.filter(user=user).first()
-        validated_data["resume"] = resume
-        return super().create(validated_data)
+        expected_resume = Resume.objects.filter(user=user).first()
+        payload_resume = data["resume"]
 
+        # Usuário não tem um currículo e não é admin
+        if not expected_resume and not user.is_superuser:
+            raise exceptions.AuthenticationFailed
+
+        if expected_resume:
+        # Usuário não é admin e tentou alterar um currículo que não é seu
+            if not user.is_superuser and expected_resume != payload_resume:
+                raise exceptions.AuthenticationFailed
+
+        return data
+    
     def get_user_data(self, obj):
         return [obj.resume.user.email, obj.resume.user.cpf]
 
