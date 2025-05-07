@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from core.models import CustomUser
 from hr.models import Position, Profile, Report, Resume, WorkExperience
 from hr.permissions import IsAdminOrReadOnly
-from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer, SlimResumeSerializer, WorkExperienceSerializer
+from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer, SlimProfileSerializer, SlimResumeSerializer, WorkExperienceSerializer
 
 class GetResumeCPF(APIView):
     '''
@@ -32,6 +32,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        """
+        Clients can filter by status if wanted
+        """
+        status = self.request.query_params.get("status")
+        if status:
+            return Profile.objects.filter(status=status)
+        
+        return Profile.objects.all()
 
 
 class SlimResumeViewSet(viewsets.ModelViewSet):
