@@ -162,6 +162,7 @@ class SlimProfileSerializer(ProfileSerializer):
     class Meta:
         model = Profile
         fields = [
+            "id",
             "client_name",
             "client",
             "client_contact",

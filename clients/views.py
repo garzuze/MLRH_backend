@@ -10,7 +10,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     filter_fields = ('id',)
 
     def get_queryset(self):
-        id_value = self.request.query_params.get("id", None);
+        id_value = self.request.query_params.get("id", None)
         if id_value:
             id_list = id_value.split(",")
             queryset = Client.objects.filter(id__in=id_list)

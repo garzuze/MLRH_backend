@@ -37,9 +37,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """
         Clients can filter by status if wanted
         """
-        status = self.request.query_params.get("status")
+        status = self.request.query_params.get("status", None)
         if status:
-            return Profile.objects.filter(status=status)
+            status_list = status.split(",")
+            return Profile.objects.filter(status__in=status_list)
         
         return Profile.objects.all()
     
