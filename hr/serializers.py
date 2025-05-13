@@ -7,6 +7,19 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+class ReportSerializer(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
+    resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
+    str_representation = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Report
+        fields = "__all__"
+
+    def get_str_representation(self, obj):
+        return str(obj)
+
+
 class WorkExperienceSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(
         queryset=Resume.objects.all(), many=False
@@ -16,7 +29,7 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
         model = WorkExperience
         fields = "__all__"
         read_only_fields = ("resume",)
-    
+
     def validate(self, data):
         user = self.context["request"].user
         expected_resume = Resume.objects.filter(user=user).first()
@@ -27,12 +40,12 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
             raise exceptions.AuthenticationFailed
 
         if expected_resume:
-        # Usuário não é admin e tentou alterar um currículo que não é seu
+            # Usuário não é admin e tentou alterar um currículo que não é seu
             if not user.is_superuser and expected_resume != payload_resume:
                 raise exceptions.AuthenticationFailed
 
         return data
-    
+
     def get_user_data(self, obj):
         return [obj.resume.user.email, obj.resume.user.cpf]
 
@@ -72,6 +85,7 @@ class ResumeSerializer(serializers.ModelSerializer):
 
 class SlimResumeSerializer(ResumeSerializer):
     """Reduced Resume Serializer for working with Resume tables"""
+
     work_experiences = WorkExperienceSerializer(
         many=True,
         read_only=True,
@@ -90,8 +104,9 @@ class SlimResumeSerializer(ResumeSerializer):
             "positions_str",
             "updated_at",
             "desired_positions",
-            "work_experiences"
+            "work_experiences",
         ]
+
 
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -128,14 +143,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.client.description
 
 
-class ReportSerializer(serializers.ModelSerializer):
-    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
-    resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
-    str_representation = serializers.SerializerMethodField()
+class SlimReportSerializer(serializers.ModelSerializer):
+    resume_name = serializers.CharField(read_only=True, source="resume.name")
+    position_name = serializers.CharField(read_only=True, source="profile.position.title")
 
     class Meta:
         model = Report
-        fields = "__all__"
+        fields = ["id", "profile", "resume", "agreed_salary", "candidate_start_date", "resume_name", "position_name"]
 
-    def get_str_representation(self, obj):
-        return str(obj)
