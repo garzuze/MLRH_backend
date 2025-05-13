@@ -151,3 +151,23 @@ class SlimReportSerializer(serializers.ModelSerializer):
         model = Report
         fields = ["id", "profile", "resume", "agreed_salary", "candidate_start_date", "resume_name", "position_name"]
 
+
+class SlimProfileSerializer(ProfileSerializer):
+    reports = SlimReportSerializer(many=True, read_only=True, source='report_set')
+    client_name = serializers.CharField(read_only=True, source="client.trade_name")
+    client_contact = serializers.CharField(read_only=True, source="client_contact.name")
+    position_name = serializers.CharField(read_only=True, source="position.title")
+    # client_contact = serializers.SlugRelatedField(many=False, read_only=True, slug_field="client")
+
+    class Meta:
+        model = Profile
+        fields = [
+            "client_name",
+            "client",
+            "client_contact",
+            "position_name",
+            "position",
+            "status",
+            "reports_list",
+            "reports"
+        ]

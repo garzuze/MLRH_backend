@@ -42,6 +42,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return Profile.objects.filter(status=status)
         
         return Profile.objects.all()
+    
+
+class SlimProfileViewSet(ProfileViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = SlimProfileSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class SlimResumeViewSet(viewsets.ModelViewSet):
