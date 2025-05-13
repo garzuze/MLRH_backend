@@ -400,7 +400,7 @@ class Profile(models.Model):
     def location(self):
         return f"{self.client.neighborhood} - {self.client.city}, {self.client.state}"
 
-    def reports(self):
+    def reports_list(self):
         reports = Report.objects.filter(profile=self)
         reports_list = []
         for report in reports:
@@ -418,8 +418,8 @@ class Profile(models.Model):
 class Report(models.Model):
     """Parecer de uma vaga"""
 
-    profile = models.ForeignKey(Profile, on_delete=models.PROTECT, default=1)
-    resume = models.ForeignKey(Resume, on_delete=models.PROTECT, default=1)
+    profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    resume = models.ForeignKey(Resume, on_delete=models.PROTECT)
 
     test_result = models.TextField(blank=True)
     personal_family_context = models.TextField(blank=True)

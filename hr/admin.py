@@ -54,7 +54,7 @@ class ProfileAdmin(admin.ModelAdmin):
         "position",
         "status",
         "created",
-        "reports"
+        "reports_list"
     ]
 
     search_fields = [
