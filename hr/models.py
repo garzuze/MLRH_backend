@@ -395,7 +395,7 @@ class Profile(models.Model):
         verbose_name_plural = "Perfis"
 
     def __str__(self):
-        return f"{self.position.title}"
+        return f"{self.position.title} - {self.client.trade_name}"
 
     def location(self):
         return f"{self.client.neighborhood} - {self.client.city}, {self.client.state}"

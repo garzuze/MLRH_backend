@@ -76,6 +76,18 @@ class ReportViewSet(viewsets.ModelViewSet):
     serializer_class = ReportSerializer
     permission_classes = [permissions.IsAdminUser]
 
+    def get_queryset(self):
+        """
+        Clients can filter by more than one id
+        """
+        status = self.request.query_params.get("id", None)
+        if status:
+            print("EU COMO COCO")
+            status_list = status.split(",")
+            return Report.objects.filter(id__in=status_list)
+        
+        return Report.objects.all()
+
 
 class WorkExperienceViewSet(viewsets.ModelViewSet):
     queryset = WorkExperience.objects.all()
