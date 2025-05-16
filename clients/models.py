@@ -100,7 +100,7 @@ class ClientContact(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}, {self.department} - {self.client}"
 
     class Meta:
         db_table = 'client_contact'

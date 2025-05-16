@@ -19,7 +19,7 @@ class ClientAdmin(admin.ModelAdmin):
 class ClientContactAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "client", "department", "phone", "email", "status"]
     search_fields = ["name", "phone"]
-    list_filter = ["status"]
+    list_filter = ["status", "client"]
 
 
 class ServiceAdmin(admin.ModelAdmin):
