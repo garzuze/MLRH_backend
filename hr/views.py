@@ -82,7 +82,6 @@ class ReportViewSet(viewsets.ModelViewSet):
         """
         status = self.request.query_params.get("id", None)
         if status:
-            print("EU COMO COCO")
             status_list = status.split(",")
             return Report.objects.filter(id__in=status_list)
         
@@ -94,18 +93,14 @@ class WorkExperienceViewSet(viewsets.ModelViewSet):
     serializer_class = WorkExperienceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        resume = Resume.objects.filter(user=request.user).first()
-        start_date = request.data.get('start_date')
-        existing_experience = WorkExperience.objects.filter(resume=resume, start_date=start_date).first()
-        # update it if it already exists
-        if existing_experience:
-            serializer = self.get_serializer(existing_experience, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        return super().create(request, *args, **kwargs)
+    def create(self, request, pk=None, company_pk=None, project_pk=None):
+        is_many = isinstance(request.data, list)
+
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         """
