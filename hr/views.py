@@ -7,6 +7,7 @@ from core.models import CustomUser
 from hr.models import Position, Profile, Report, Resume, WorkExperience
 from hr.permissions import IsAdminOrReadOnly
 from hr.serializers import PositionSerializer, ProfileSerializer, ReportSerializer, ResumeSerializer, SlimProfileSerializer, SlimResumeSerializer, WorkExperienceSerializer
+from datetime import datetime, timedelta
 
 class GetResumeCPF(APIView):
     '''
@@ -81,9 +82,14 @@ class ReportViewSet(viewsets.ModelViewSet):
         Clients can filter by more than one id
         """
         status = self.request.query_params.get("id", None)
+        invoiceable = self.request.query_params.get("invoiceable", None)
+        
         if status:
             status_list = status.split(",")
             return Report.objects.filter(id__in=status_list)
+        
+        if invoiceable:
+            return Report.objects.filter(candidate_start_date__gte=(datetime.today() - timedelta(weeks=3)))
         
         return Report.objects.all()
 
