@@ -12,6 +12,7 @@ class ReportSerializer(serializers.ModelSerializer):
     resume = serializers.PrimaryKeyRelatedField(queryset=Resume.objects.all())
     str_representation = serializers.SerializerMethodField()
     profile_fee = serializers.SerializerMethodField()
+    client_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
@@ -22,6 +23,9 @@ class ReportSerializer(serializers.ModelSerializer):
     
     def get_profile_fee(self, obj):
         return obj.profile.fee.percentual
+    
+    def get_client_data(self, obj):
+        return {"client": obj.profile.client.id, "client_contact":obj.profile.client_contact.id}
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
