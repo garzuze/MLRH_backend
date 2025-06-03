@@ -81,12 +81,12 @@ class ReportViewSet(viewsets.ModelViewSet):
         """
         Clients can filter by more than one id
         """
-        status = self.request.query_params.get("id", None)
+        ids = self.request.query_params.get("id", None)
         invoiceable = self.request.query_params.get("invoiceable", None)
         
-        if status:
-            status_list = status.split(",")
-            return Report.objects.filter(id__in=status_list)
+        if ids:
+            ids_list = ids.split(",")
+            return Report.objects.filter(id__in=ids_list)
         
         if invoiceable:
             return Report.objects.filter(candidate_start_date__gte=(datetime.today() - timedelta(weeks=3)))

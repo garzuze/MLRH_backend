@@ -14,8 +14,8 @@ class ClientViewSet(viewsets.ModelViewSet):
         if id_value:
             id_list = id_value.split(",")
             queryset = Client.objects.filter(id__in=id_list)
-
-        return queryset
+            return queryset
+        return Client.objects.all() 
 
 
 class BenefitViewSet(viewsets.ModelViewSet):
